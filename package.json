@@ -1,0 +1,21 @@
+{
+  "name": "demo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "alphaquestv2.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node alphaquestv2.js",
+    "perry": "node alfaquestv2.js",
+    "dada": "node alfaquestv2.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.19.2",
+    "jade": "^1.11.0",
+    "node-fetch": "^3.3.2",
+    "nodemon": "^2.0.12",
+    "prompt-sync": "^4.2.0"
+  }
+}

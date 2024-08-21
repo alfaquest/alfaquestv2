@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <script type="text/javascript" src="../alfaquest1.js"></script>
+</head>    
+<body>
+    <form>
+
+<h1>ΑLΦΑQUΕΣΤOR</h1>
+<p> Game category = Countries of the World.<br>
+    24 round game, 24 available unique starting letters.<br>
+    No countries currently exist with starting letters 'W' & 'X'.<br>
+    'W' & 'X' and all punctuation marks are ignored in this game.<br>
+    Αlφαqυεsτor concept, devised and written by Jude Shiels.<br>
+    Copyright (C) 2018 - Drakopoulos Games - All Rights Reserved</p>
+
+
+
+
+    <script>
+        fetch('/api/testor').then(response => response.json())
+        .then(testor => document.body.innerHTML += testor)
+    </script>
+    
+
+    
+    <script>
+        fetch('/api/word1g').then(response => response.json())
+        .then(word1g => document.body.innerHTML += word1g)
+           </script> 
+
+<input type="text" placeholder="Type something..." id="word1">
+    <button type="button" onclick="getInputValue()">Submit</button>
+
+    <script>
+
+const button = document.getElementById('word1');
+let formData = new FormData()
+//formData.append("nameField", fileToSend)
+button.addEventListener('click', async _ => {   
+fetch('/api/word1p', {
+   method: "POST",
+   body: ""
+})
+  })
+          </script>
+
+
+
+</form>
+</body>
+</html>

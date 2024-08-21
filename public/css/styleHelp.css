@@ -1,0 +1,77 @@
+body {
+    background-color: #0c0c00;
+    background-image: url(../images/space2.jpg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+h1 {
+  color: cyan;
+  font-size: 30px;
+  font-family: "Monospace";
+  text-align: center;
+  margin-top: 25%;
+  margin-left: 40%;
+  margin-right: 40%;
+  background-position-x: center;
+  background-position-y: center;
+  background: rgba(2, 51, 2, 0.5);
+  width: 15%;
+
+}
+
+h2 {
+  color: cyan;
+  font-size: 30px;
+  font-family: "Monospace";
+  text-align: center;
+  margin-left: 40%;
+  margin-right: 40%;
+  background-position-x: center;
+  background-position-y: center;
+  background: rgba(2, 51, 2, 0.5);
+  width: 15%;
+
+}
+
+p {
+  color: cyan;
+  font-size: 20px;
+  font-family: "Monospace";
+  text-align: center;
+  background: rgba(2, 51, 2, 0.5);
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+#paragraph1 {
+  color: cyan;
+  font-size: 20px;
+  font-family: "Monospace";
+  text-align: center;
+  background: rgba(2, 51, 2, 0.5);
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+#paragraph2 {
+  color: cyan;
+  font-size: 20px;
+  font-family: "Monospace";
+  text-align: center;
+  background: rgba(2, 51, 2, 0.5);
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+#paragraph3 {
+  color: cyan;
+  font-size: 20px;
+  font-family: "Monospace";
+  text-align: center;
+  background: rgba(2, 51, 2, 0.5);
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.link {color: #ebe707; };
