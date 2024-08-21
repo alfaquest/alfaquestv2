@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="css/style.css">
+
+</head>    
+<body>
+
+<form>
+    <h1><!-- ΑLΦΑQUΕΣΤ --></h1> 
+    <p> Prototype Game Category: Countries of the World.<br>
+        24 round game, 24 available unique starting letters.<br>
+        No countries currently exist with starting letters 'W' & 'X'.<br>
+        Letters 'W' & 'X' and all punctuation marks are ignored in this edition of ΑLΦΑQUΕΣΤ.
+        </p>
+        <br><br>
+
+        <div class="blink"><p id="twohundred">Answer Accepted</p></div>
+        <div class="blink"><p id="twohundredone"></p></div>
+        <div class="blink"><p id="fourhundred"></p></div>
+        <div class="blink"><p id="fourhundredfour"></p></div>
+
+        <br>
+
+        <input type="text" placeholder="Type Answer 1..." id="word1" autofocus>
+        <button type="button" id="word1btn" onclick="getInputValue1()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 2..." id="word2">
+        <button type="button" id="word2btn" onclick="getInputValue2()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 3..." id="word3">
+        <button type="button" id="word3btn" onclick="getInputValue3()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 4..." id="word4">
+        <button type="button" id="word4btn" onclick="getInputValue4()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 5..." id="word5">
+        <button type="button" id="word5btn" onclick="getInputValue5()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 6..." id="word6">
+        <button type="button" id="word6btn" onclick="getInputValue6()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 7..." id="word7">
+        <button type="button" id="word7btn" onclick="getInputValue7()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 8..." id="word8">
+        <button type="button" id="word8btn" onclick="getInputValue8()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 9..." id="word9">
+        <button type="button" id="word9btn" onclick="getInputValue9()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 10..." id="word10">
+        <button type="button" id="word10btn" onclick="getInputValue10()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 11..." id="word11">
+        <button type="button" id="word11btn" onclick="getInputValue11()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 12..." id="word12">
+        <button type="button" id="word12btn" onclick="getInputValue12()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 13..." id="word13">
+        <button type="button" id="word13btn" onclick="getInputValue13()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 14..." id="word14">
+        <button type="button" id="word14btn" onclick="getInputValue14()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 15..." id="word15">
+        <button type="button" id="word15btn" onclick="getInputValue15()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 16..." id="word16">
+        <button type="button" id="word16btn" onclick="getInputValue16()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 17..." id="word17">
+        <button type="button" id="word17btn" onclick="getInputValue17()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 18..." id="word18">
+        <button type="button" id="word18btn" onclick="getInputValue18()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 19..." id="word19">
+        <button type="button" id="word19btn" onclick="getInputValue19()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 20..." id="word20">
+        <button type="button" id="word20btn" onclick="getInputValue20()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 21..." id="word21">
+        <button type="button" id="word21btn" onclick="getInputValue21()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 22..." id="word22">
+        <button type="button" id="word22btn" onclick="getInputValue22()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 23..." id="word23">
+        <button type="button" id="word23btn" onclick="getInputValue23()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 24..." id="word24">
+        <button type="button" id="word24btn" onclick="getInputValue24()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 25..." id="word25">
+        <button type="button" id="word25btn" onclick="getInputValue25()">SUBMIT</button>
+        <input type="text" placeholder="Type Answer 26..." id="word26">
+        <button type="button" id="word26btn" onclick="getInputValue26()">SUBMIT</button>
+
+        <p id="next"></p><p id="used"></p>
+
+        <p id="help">
+            <a href="./helpv2.html" target="_blank"><body link="cyan" vlink="yellow" alink="green">ALΦAQUEST EXPLAINED</a>
+   <br>        </p>
+   <p id="source">
+            <a href="https://en.wikipedia.org/wiki/List_of_sovereign_states" target="_blank">source reference</a>
+        </p>
+
+            <div class="footer">
+                <h5>Αlφαqυεsτ concept, devised and written by Jude Shiels.<br>
+                    Copyright (C) 2018 - Drakopoulos Games - All Rights Reserved</h5>
+              </div>
+
+<script> 
+    var doc1  = document.getElementById("word1")
+    var word1 = doc1.value;
+    doc1.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn1.click();
+    }
+    });
+
+    var btn1 = document.getElementById("word1btn")
+    var wordbtn1 = btn1.value;
+    btn1.style.visibility = 'visible'
+
+    var doc2  = document.getElementById("word2")
+    var word2 = doc2.value;
+    doc2.style.visibility = 'hidden'
+    doc2.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn2.click();
+    }
+    });
+
+    var btn2 = document.getElementById("word2btn")
+    var wordbtn2 = btn2.value;
+    btn2.style.visibility = 'hidden'
+
+    var doc3 = document.getElementById("word3")
+    var word3 = doc3.value;
+    doc3.style.visibility = 'hidden'
+    doc3.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn3.click();
+    }
+    });
+
+    var btn3 = document.getElementById("word3btn")
+    var wordbtn3 = btn3.value;
+    btn3.style.visibility = 'hidden'
+
+    var doc4  = document.getElementById("word4")
+    var word4 = doc4.value;
+    doc4.style.visibility = 'hidden'
+    doc4.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn4.click();
+    }
+    });
+
+    var btn4 = document.getElementById("word4btn")
+    var wordbtn4 = btn4.value;
+    btn4.style.visibility = 'hidden'
+
+    var doc5  = document.getElementById("word5")
+    var word5 = doc2.value;
+    doc5.style.visibility = 'hidden'
+    doc5.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn5.click();
+    }
+    });
+
+    var btn5 = document.getElementById("word5btn")
+    var wordbtn5 = btn5.value;
+    btn5.style.visibility = 'hidden'
+
+    var doc6  = document.getElementById("word6")
+    var word6 = doc6.value;
+    doc6.style.visibility = 'hidden'
+    doc6.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn6.click();
+    }
+    });
+
+    var btn6 = document.getElementById("word6btn")
+    var wordbtn6 = btn6.value;
+    btn6.style.visibility = 'hidden'
+
+    var doc7 = document.getElementById("word7")
+    var word7 = doc7.value;
+    doc7.style.visibility = 'hidden'
+    doc7.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn7.click();
+    }
+    });
+
+    var btn7 = document.getElementById("word7btn")
+    var wordbtn7 = btn7.value;
+    btn7.style.visibility = 'hidden'
+
+    var doc8  = document.getElementById("word8")
+    var word8 = doc8.value;
+    doc8.style.visibility = 'hidden'
+    doc8.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn8.click();
+    }
+    });
+
+    var btn8 = document.getElementById("word8btn")
+    var wordbtn8 = btn8.value;
+    btn8.style.visibility = 'hidden'
+
+    var doc9  = document.getElementById("word9")
+    var word9 = doc9.value;
+    doc9.style.visibility = 'hidden'
+    doc9.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn9.click();
+    }
+    });
+
+    var btn9 = document.getElementById("word9btn")
+    var wordbtn9 = btn9.value;
+    btn9.style.visibility = 'hidden'
+
+    var doc10  = document.getElementById("word10")
+    var word10 = doc10.value;
+    doc10.style.visibility = 'hidden'
+    doc10.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn10.click();
+    }
+    });
+
+    var btn10 = document.getElementById("word10btn")
+    var wordbtn10 = btn10.value;
+    btn10.style.visibility = 'hidden'
+
+    var doc11 = document.getElementById("word11")
+    var word11 = doc11.value;
+    doc11.style.visibility = 'hidden'
+    doc11.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn11.click();
+    }
+    });
+
+    var btn11 = document.getElementById("word11btn")
+    var wordbtn11 = btn11.value;
+    btn11.style.visibility = 'hidden'
+
+    var doc12  = document.getElementById("word12")
+    var word12 = doc12.value;
+    doc12.style.visibility = 'hidden'
+    doc12.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn12.click();
+    }
+    });
+
+    var btn12 = document.getElementById("word12btn")
+    var wordbtn12 = btn12.value;
+    btn12.style.visibility = 'hidden'
+
+    var doc13  = document.getElementById("word13")
+    var word13 = doc13.value;
+    doc13.style.visibility = 'hidden'
+    doc13.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn13.click();
+    }
+    });
+
+    var btn13 = document.getElementById("word13btn")
+    var wordbtn13 = btn13.value;
+    btn13.style.visibility = 'hidden'
+
+    var doc14 = document.getElementById("word14")
+    var word14 = doc14.value;
+    doc14.style.visibility = 'hidden'
+    doc14.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn14.click();
+    }
+    });
+
+    var btn14 = document.getElementById("word14btn")
+    var wordbtn14 = btn14.value;
+    btn14.style.visibility = 'hidden'
+
+    var doc15  = document.getElementById("word15")
+    var word15 = doc15.value;
+    doc15.style.visibility = 'hidden'
+    doc15.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn15.click();
+    }
+    });
+
+    var btn15 = document.getElementById("word15btn")
+    var wordbtn15 = btn15.value;
+    btn15.style.visibility = 'hidden'
+
+    var doc16  = document.getElementById("word16")
+    var word16 = doc16.value;
+    doc16.style.visibility = 'hidden'
+    doc16.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn16.click();
+    }
+    });
+
+    var btn16 = document.getElementById("word16btn")
+    var wordbtn16 = btn16.value;
+    btn16.style.visibility = 'hidden'
+
+    var doc17  = document.getElementById("word17")
+    var word17 = doc17.value;
+    doc17.style.visibility = 'hidden'
+    doc17.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn17.click();
+    }
+    });
+
+    var btn17 = document.getElementById("word17btn")
+    var wordbtn17 = btn17.value;
+    btn17.style.visibility = 'hidden'
+
+    var doc18  = document.getElementById("word18")
+    var word18 = doc18.value;
+    doc18.style.visibility = 'hidden'
+    doc18.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn18.click();
+    }
+    });
+
+    var btn18 = document.getElementById("word18btn")
+    var wordbtn18 = btn18.value;
+    btn18.style.visibility = 'hidden'
+
+    var doc19  = document.getElementById("word19")
+    var word19 = doc19.value;
+    doc19.style.visibility = 'hidden'
+    doc19.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn19.click();
+    }
+    });
+
+    var btn19 = document.getElementById("word19btn")
+    var wordbtn19 = btn19.value;
+    btn19.style.visibility = 'hidden'
+
+    var doc20  = document.getElementById("word20")
+    var word20 = doc20.value;
+    doc20.style.visibility = 'hidden'
+    doc20.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn20.click();
+    }
+    });
+
+    var btn20 = document.getElementById("word20btn")
+    var wordbtn20 = btn20.value;
+    btn20.style.visibility = 'hidden'
+
+    var doc21  = document.getElementById("word21")
+    var word21 = doc21.value;
+    doc21.style.visibility = 'hidden'
+    doc21.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn21.click();
+    }
+    });
+
+    var btn21 = document.getElementById("word21btn")
+    var wordbtn21 = btn21.value;
+    btn21.style.visibility = 'hidden'
+
+    var doc22 = document.getElementById("word22")
+    var word22 = doc22.value;
+    doc22.style.visibility = 'hidden'
+    doc22.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn22.click();
+    }
+    });
+
+    var btn22 = document.getElementById("word22btn")
+    var wordbtn22 = btn22.value;
+    btn22.style.visibility = 'hidden'
+
+    var doc23  = document.getElementById("word23")
+    var word23 = doc23.value;
+    doc23.style.visibility = 'hidden'
+    doc23.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn23.click();
+    }
+    });
+
+    var btn23 = document.getElementById("word23btn")
+    var wordbtn23 = btn23.value;
+    btn23.style.visibility = 'hidden'
+
+    var doc24  = document.getElementById("word24")
+    var word24 = doc24.value;
+    doc24.style.visibility = 'hidden'
+    doc24.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn24.click();
+    }
+    });
+
+    var btn24 = document.getElementById("word24btn")
+    var wordbtn24 = btn24.value;
+    btn24.style.visibility = 'hidden'
+
+    var doc25  = document.getElementById("word25")
+    var word25 = doc25.value;
+    doc25.style.visibility = 'hidden'
+    doc25.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn25.click();
+    }
+    });
+
+    var btn25 = document.getElementById("word25btn")
+    var wordbtn25 = btn25.value;
+    btn25.style.visibility = 'hidden'
+
+    var doc26  = document.getElementById("word26")
+    var word26 = doc26.value;
+    doc26.style.visibility = 'hidden'
+    doc26.addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        btn26.click();
+    }
+    });
+
+    var btn26 = document.getElementById("word26btn")
+    var wordbtn26 = btn26.value;
+    btn26.style.visibility = 'hidden'
+
+</script> 
+
+<script> 
+    document.getElementById('twohundred').style.visibility = 'hidden'
+    
+async function getInputValue1(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc1  = document.getElementById("word1")
+    var doc1btn  = document.getElementById("word1btn")
+    var doc2  = document.getElementById("word2")
+    var doc2btn  = document.getElementById("word2btn")
+    doc1.style.visibility = 'hidden'
+    doc1btn.style.visibility = 'hidden'
+    doc2.style.visibility = 'visible'
+    doc2btn.style.visibility = 'visible'
+    doc2.focus()
+    var word1 = doc1.value;
+ 
+    const response = await fetch('/api/word1', {
+        method: "POST",
+        body: word1
+    }
+)
+const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word2').style.visibility = 'hidden'; document.getElementById('word2btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden';  }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word2').style.visibility = 'hidden'; document.getElementById('word2btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word2').style.visibility = 'hidden'; document.getElementById('word2btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue2(){
+    
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    document.getElementById('twohundred').style.visibility = 'hidden'
+    var doc2 = document.getElementById("word2")
+    var doc2btn = document.getElementById("word2btn")
+    var doc3 = document.getElementById("word3")
+    var doc3btn = document.getElementById("word3btn")
+    doc2.style.visibility = 'hidden'
+    doc2btn.style.visibility = 'hidden'
+    doc3.style.visibility = 'visible'
+    doc3btn.style.visibility = 'visible'
+    doc3.focus()
+    var word2 = doc2.value;
+
+    const response = await fetch('/api/word2', {
+        method: "POST",
+        body: word2
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word3').style.visibility = 'hidden'; document.getElementById('word3btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word3').style.visibility = 'hidden'; document.getElementById('word3btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word3').style.visibility = 'hidden'; document.getElementById('word3btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue3(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    //document.getElementById('twohundred').remove()
+    var doc3 = document.getElementById("word3")
+    var doc3btn = document.getElementById("word3btn")
+    var doc4 = document.getElementById("word4")
+    var doc4btn = document.getElementById("word4btn")
+    doc3.style.visibility = 'hidden'
+    doc3btn.style.visibility = 'hidden'
+    doc4.style.visibility = 'visible'
+    doc4btn.style.visibility = 'visible'
+    doc4.focus()
+    var word3 = doc3.value;
+ 
+    const response = await fetch('/api/word3', {
+        method: "POST",
+        body: word3
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word4').style.visibility = 'hidden'; document.getElementById('word4btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word4').style.visibility = 'hidden'; document.getElementById('word4btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word4').style.visibility = 'hidden'; document.getElementById('word4btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue4(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc4 = document.getElementById("word4")
+    var doc4btn = document.getElementById("word4btn")
+    var doc5 = document.getElementById("word5")
+    var doc5btn = document.getElementById("word5btn")
+    doc4.style.visibility = 'hidden'
+    doc4btn.style.visibility = 'hidden'
+    doc5.style.visibility = 'visible'
+    doc5btn.style.visibility = 'visible'
+    doc5.focus()
+    var word4 = doc4.value;
+ 
+    const response = await fetch('/api/word4', {
+        method: "POST",
+        body: word4
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word5').style.visibility = 'hidden'; document.getElementById('word5btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word5').style.visibility = 'hidden'; document.getElementById('word5btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word5').style.visibility = 'hidden'; document.getElementById('word5btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue5(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc5 = document.getElementById("word5")
+    var doc5btn = document.getElementById("word5btn")
+    var doc6 = document.getElementById("word6")
+    var doc6btn = document.getElementById("word6btn")
+    doc5.style.visibility = 'hidden'
+    doc5btn.style.visibility = 'hidden'
+    doc6.style.visibility = 'visible'
+    doc6btn.style.visibility = 'visible'
+    doc6.focus()
+    var word5 = doc5.value;
+ 
+    const response = await fetch('/api/word5', {
+        method: "POST",
+        body: word5
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word6').style.visibility = 'hidden'; document.getElementById('word6btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word6').style.visibility = 'hidden'; document.getElementById('word6btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word6').style.visibility = 'hidden'; document.getElementById('word6btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue6(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc6 = document.getElementById("word6")
+    var doc6btn = document.getElementById("word6btn")
+    var doc7 = document.getElementById("word7")
+    var doc7btn = document.getElementById("word7btn")
+    doc6.style.visibility = 'hidden'
+    doc6btn.style.visibility = 'hidden'
+    doc7.style.visibility = 'visible'
+    doc7btn.style.visibility = 'visible'
+    doc7.focus()
+    var word6 = doc6.value;
+ 
+     const response = await fetch('/api/word6', {
+        method: "POST",
+        body: word6
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word7').style.visibility = 'hidden'; document.getElementById('word7btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word7').style.visibility = 'hidden'; document.getElementById('word7btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word7').style.visibility = 'hidden'; document.getElementById('word7btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue7(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc7 = document.getElementById("word7")
+    var doc7btn = document.getElementById("word7btn")
+    var doc8 = document.getElementById("word8")
+    var doc8btn = document.getElementById("word8btn")
+    doc7.style.visibility = 'hidden'
+    doc7btn.style.visibility = 'hidden'
+    doc8.style.visibility = 'visible'
+    doc8btn.style.visibility = 'visible'
+    doc8.focus()
+    var word7 = doc7.value;
+ 
+     const response = await fetch('/api/word7', {
+        method: "POST",
+        body: word7
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word8').style.visibility = 'hidden'; document.getElementById('word8btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word8').style.visibility = 'hidden'; document.getElementById('word8btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word8').style.visibility = 'hidden'; document.getElementById('word8btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue8(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc8 = document.getElementById("word8")
+    var doc8btn = document.getElementById("word8btn")
+    var doc9 = document.getElementById("word9")
+    var doc9btn = document.getElementById("word9btn")
+    doc8.style.visibility = 'hidden'
+    doc8btn.style.visibility = 'hidden'
+    doc9.style.visibility = 'visible'
+    doc9btn.style.visibility = 'visible'
+    doc9.focus()
+    var word8 = doc8.value;
+ 
+     const response = await fetch('/api/word8', {
+        method: "POST",
+        body: word8
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word9').style.visibility = 'hidden'; document.getElementById('word9btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word9').style.visibility = 'hidden'; document.getElementById('word9btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word9').style.visibility = 'hidden'; document.getElementById('word9btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue9(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc9 = document.getElementById("word9")
+    var doc9btn = document.getElementById("word9btn")
+    var doc10 = document.getElementById("word10")
+    var doc10btn = document.getElementById("word10btn")
+    doc9.style.visibility = 'hidden'
+    doc9btn.style.visibility = 'hidden'
+    doc10.style.visibility = 'visible'
+    doc10btn.style.visibility = 'visible'
+    doc10.focus()
+    var word9 = doc9.value;
+ 
+     const response = await fetch('/api/word9', {
+        method: "POST",
+        body: word9
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word10').style.visibility = 'hidden'; document.getElementById('word10btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word10').style.visibility = 'hidden'; document.getElementById('word10btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word10').style.visibility = 'hidden'; document.getElementById('word10btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue10(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc10 = document.getElementById("word10")
+    var doc10btn = document.getElementById("word10btn")
+    var doc11 = document.getElementById("word11")
+    var doc11btn = document.getElementById("word11btn")
+    doc10.style.visibility = 'hidden'
+    doc10btn.style.visibility = 'hidden'
+    doc11.style.visibility = 'visible'
+    doc11btn.style.visibility = 'visible'
+    doc11.focus()
+    var word10 = doc10.value;
+ 
+     const response = await fetch('/api/word10', {
+        method: "POST",
+        body: word10
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word11').style.visibility = 'hidden'; document.getElementById('word11btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word11').style.visibility = 'hidden'; document.getElementById('word11btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word11').style.visibility = 'hidden'; document.getElementById('word11btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue11(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc11 = document.getElementById("word11")
+    var doc11btn = document.getElementById("word11btn")
+    var doc12 = document.getElementById("word12")
+    var doc12btn = document.getElementById("word12btn")
+    doc11.style.visibility = 'hidden'
+    doc11btn.style.visibility = 'hidden'
+    doc12.style.visibility = 'visible'
+    doc12btn.style.visibility = 'visible'
+    doc12.focus()
+    var word11 = doc11.value;
+ 
+     const response = await fetch('/api/word11', {
+        method: "POST",
+        body: word11
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word12').style.visibility = 'hidden'; document.getElementById('word12btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word12').style.visibility = 'hidden'; document.getElementById('word12btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word12').style.visibility = 'hidden'; document.getElementById('word12btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue12(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc12 = document.getElementById("word12")
+    var doc12btn = document.getElementById("word12btn")
+    var doc13 = document.getElementById("word13")
+    var doc13btn = document.getElementById("word13btn")
+    doc12.style.visibility = 'hidden'
+    doc12btn.style.visibility = 'hidden'
+    doc13.style.visibility = 'visible'
+    doc13btn.style.visibility = 'visible'
+    doc13.focus()
+    var word12 = doc12.value;
+ 
+     const response = await fetch('/api/word12', {
+        method: "POST",
+        body: word12
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word13').style.visibility = 'hidden'; document.getElementById('word13btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word13').style.visibility = 'hidden'; document.getElementById('word13btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word13').style.visibility = 'hidden'; document.getElementById('word13btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+    
+async function getInputValue13(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc13 = document.getElementById("word13")
+    var doc13btn = document.getElementById("word13btn")
+    var doc14 = document.getElementById("word14")
+    var doc14btn = document.getElementById("word14btn")
+    doc13.style.visibility = 'hidden'
+    doc13btn.style.visibility = 'hidden'
+    doc14.style.visibility = 'visible'
+    doc14btn.style.visibility = 'visible'
+    doc14.focus()
+    var word13 = doc13.value;
+ 
+     const response = await fetch('/api/word13', {
+        method: "POST",
+        body: word13
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word14').style.visibility = 'hidden'; document.getElementById('word14btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word14').style.visibility = 'hidden'; document.getElementById('word14btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word14').style.visibility = 'hidden'; document.getElementById('word14btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}    
+
+async function getInputValue14(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc14 = document.getElementById("word14")
+    var doc14btn = document.getElementById("word14btn")
+    var doc15 = document.getElementById("word15")
+    var doc15btn = document.getElementById("word15btn")
+    doc14.style.visibility = 'hidden'
+    doc14btn.style.visibility = 'hidden'
+    doc15.style.visibility = 'visible'
+    doc15btn.style.visibility = 'visible'
+    doc15.focus()
+    var word14 = doc14.value;
+ 
+     const response = await fetch('/api/word14', {
+        method: "POST",
+        body: word14
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word15').style.visibility = 'hidden'; document.getElementById('word15btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word15').style.visibility = 'hidden'; document.getElementById('word15btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word15').style.visibility = 'hidden'; document.getElementById('word15btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}    
+
+async function getInputValue15(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc15 = document.getElementById("word15")
+    var doc15btn = document.getElementById("word15btn")
+    var doc16 = document.getElementById("word16")
+    var doc16btn = document.getElementById("word16btn")
+    doc15.style.visibility = 'hidden'
+    doc15btn.style.visibility = 'hidden'
+    doc16.style.visibility = 'visible'
+    doc16btn.style.visibility = 'visible'
+    doc16.focus()
+    var word15 = doc15.value;
+ 
+     const response = await fetch('/api/word15', {
+        method: "POST",
+        body: word15
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word16').style.visibility = 'hidden'; document.getElementById('word16btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word16').style.visibility = 'hidden'; document.getElementById('word16btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word16').style.visibility = 'hidden'; document.getElementById('word16btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}  
+
+async function getInputValue16(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc16 = document.getElementById("word16")
+    var doc16btn = document.getElementById("word16btn")
+    var doc17 = document.getElementById("word17")
+    var doc17btn = document.getElementById("word17btn")
+    doc16.style.visibility = 'hidden'
+    doc16btn.style.visibility = 'hidden'
+    doc17.style.visibility = 'visible'
+    doc17btn.style.visibility = 'visible'
+    doc17.focus()
+    var word16 = doc16.value;
+ 
+     const response = await fetch('/api/word16', {
+        method: "POST",
+        body: word16
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word17').style.visibility = 'hidden'; document.getElementById('word17btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word17').style.visibility = 'hidden'; document.getElementById('word17btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word17').style.visibility = 'hidden'; document.getElementById('word17btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}   
+
+async function getInputValue17(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc17 = document.getElementById("word17")
+    var doc17btn = document.getElementById("word17btn")
+    var doc18 = document.getElementById("word18")
+    var doc18btn = document.getElementById("word18btn")
+    doc17.style.visibility = 'hidden'
+    doc17btn.style.visibility = 'hidden'
+    doc18.style.visibility = 'visible'
+    doc18btn.style.visibility = 'visible'
+    doc18.focus()
+    var word17 = doc17.value;
+ 
+     const response = await fetch('/api/word17', {
+        method: "POST",
+        body: word17
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word18').style.visibility = 'hidden'; document.getElementById('word18btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word18').style.visibility = 'hidden'; document.getElementById('word18btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word18').style.visibility = 'hidden'; document.getElementById('word18btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+} 
+
+async function getInputValue18(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc18 = document.getElementById("word18")
+    var doc18btn = document.getElementById("word18btn")
+    var doc19 = document.getElementById("word19")
+    var doc19btn = document.getElementById("word19btn")
+    doc18.style.visibility = 'hidden'
+    doc18btn.style.visibility = 'hidden'
+    doc19.style.visibility = 'visible'
+    doc19btn.style.visibility = 'visible'
+    doc19.focus()
+    var word18 = doc18.value;
+ 
+     const response = await fetch('/api/word18', {
+        method: "POST",
+        body: word18
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word19').style.visibility = 'hidden'; document.getElementById('word19btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word19').style.visibility = 'hidden'; document.getElementById('word19btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word19').style.visibility = 'hidden'; document.getElementById('word19btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+} 
+
+async function getInputValue19(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc19 = document.getElementById("word19")
+    var doc19btn = document.getElementById("word19btn")
+    var doc20 = document.getElementById("word20")
+    var doc20btn = document.getElementById("word20btn")
+    doc19.style.visibility = 'hidden'
+    doc19btn.style.visibility = 'hidden'
+    doc20.style.visibility = 'visible'
+    doc20btn.style.visibility = 'visible'
+    doc20.focus()
+    var word19 = doc19.value;
+ 
+     const response = await fetch('/api/word19', {
+        method: "POST",
+        body: word19
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word20').style.visibility = 'hidden'; document.getElementById('word20btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word20').style.visibility = 'hidden'; document.getElementById('word20btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word20').style.visibility = 'hidden'; document.getElementById('word20btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+} 
+
+async function getInputValue20(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc20 = document.getElementById("word20")
+    var doc20btn = document.getElementById("word20btn")
+    var doc21 = document.getElementById("word21")
+    var doc21btn = document.getElementById("word21btn")
+    doc20.style.visibility = 'hidden'
+    doc20btn.style.visibility = 'hidden'
+    doc21.style.visibility = 'visible'
+    doc21btn.style.visibility = 'visible'
+    doc21.focus()
+    var word20 = doc20.value;
+ 
+     const response = await fetch('/api/word20', {
+        method: "POST",
+        body: word20
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word21').style.visibility = 'hidden'; document.getElementById('word21btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word21').style.visibility = 'hidden'; document.getElementById('word21btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word21').style.visibility = 'hidden'; document.getElementById('word21btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+} 
+
+async function getInputValue21(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc21 = document.getElementById("word21")
+    var doc21btn = document.getElementById("word21btn")
+    var doc22 = document.getElementById("word22")
+    var doc22btn = document.getElementById("word22btn")
+    doc21.style.visibility = 'hidden'
+    doc21btn.style.visibility = 'hidden'
+    doc22.style.visibility = 'visible'
+    doc22btn.style.visibility = 'visible'
+    doc22.focus()
+    var word21 = doc21.value;
+ 
+     const response = await fetch('/api/word21', {
+        method: "POST",
+        body: word21
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word22').style.visibility = 'hidden'; document.getElementById('word22btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word22').style.visibility = 'hidden'; document.getElementById('word22btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word22').style.visibility = 'hidden'; document.getElementById('word22btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue22(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc22 = document.getElementById("word22")
+    var doc22btn = document.getElementById("word22btn")
+    var doc23 = document.getElementById("word23")
+    var doc23btn = document.getElementById("word23btn")
+    doc22.style.visibility = 'hidden'
+    doc22btn.style.visibility = 'hidden'
+    doc23.style.visibility = 'visible'
+    doc23btn.style.visibility = 'visible'
+    doc23.focus()
+    var word22 = doc22.value;
+ 
+     const response = await fetch('/api/word22', {
+        method: "POST",
+        body: word22
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word23').style.visibility = 'hidden'; document.getElementById('word23btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word23').style.visibility = 'hidden'; document.getElementById('word23btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word23').style.visibility = 'hidden'; document.getElementById('word23btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue23(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc23 = document.getElementById("word23")
+    var doc23btn = document.getElementById("word23btn")
+    var doc24 = document.getElementById("word24")
+    var doc24btn = document.getElementById("word24btn")
+    doc23.style.visibility = 'hidden'
+    doc23btn.style.visibility = 'hidden'
+    doc24.style.visibility = 'visible'
+    doc24btn.style.visibility = 'visible'
+    doc24.focus()
+    var word23 = doc23.value;
+ 
+     const response = await fetch('/api/word23', {
+        method: "POST",
+        body: word23
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word24').style.visibility = 'hidden'; document.getElementById('word24btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word24').style.visibility = 'hidden'; document.getElementById('word24btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word24').style.visibility = 'hidden'; document.getElementById('word24btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue24(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc24 = document.getElementById("word24")
+    var doc24btn = document.getElementById("word24btn")
+    var doc25 = document.getElementById("word25")
+    var doc25btn = document.getElementById("word25btn")
+    doc24.style.visibility = 'hidden'
+    doc24btn.style.visibility = 'hidden'
+    doc25.style.visibility = 'visible'
+    doc25btn.style.visibility = 'visible'
+    doc25.focus()
+    var word24 = doc24.value;
+ 
+     const response = await fetch('/api/word24', {
+        method: "POST",
+        body: word24
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word25').style.visibility = 'hidden'; document.getElementById('word25btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word25').style.visibility = 'hidden'; document.getElementById('word25btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word25').style.visibility = 'hidden'; document.getElementById('word25btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+async function getInputValue25(){
+    var used = document.getElementById("used")
+    var next = document.getElementById("next")
+
+    var doc25 = document.getElementById("word25")
+    var doc25btn = document.getElementById("word25btn")
+    var doc26 = document.getElementById("word26")
+    var doc26btn = document.getElementById("word26btn")
+    doc25.style.visibility = 'hidden'
+    doc25btn.style.visibility = 'hidden'
+    doc26.style.visibility = 'visible'
+    doc26btn.style.visibility = 'visible'
+    doc26.focus()
+    var word25 = doc25.value;
+ 
+     const response = await fetch('/api/word25', {
+        method: "POST",
+        body: word25
+    })
+    const responseText = await response.text()
+
+    if (await response.status === 200) { document.getElementById('twohundred').style.visibility = 'visible'; setTimeout(function(){document.getElementById('twohundred').style.visibility = 'hidden';}, 3000); used.innerHTML = "used starting letters: "+ responseText.substring(2).toUpperCase(); next.innerHTML = "next starting letter: "+ responseText.substring(0,1)}
+    else if (await response.status === 201) {document.getElementById('twohundredone').innerHTML = ("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤ!"); document.getElementById('word26').style.visibility = 'hidden'; document.getElementById('word26btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden' }
+    else if (await response.status === 404) { document.getElementById('fourhundredfour').innerHTML = ("Incorrect Answer or Spelling, GAME OVER"); document.getElementById('word26').style.visibility = 'hidden'; document.getElementById('word26btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+    else if (await response.status === 400) { document.getElementById('fourhundred').innerHTML = ("You are all out of available letters, GAME OVER"); document.getElementById('word26').style.visibility = 'hidden'; document.getElementById('word26btn').style.visibility = 'hidden'; document.getElementById('twohundred').style.visibility = 'hidden'; used.style.visibility = 'hidden'; next.style.visibility = 'hidden' }
+}
+
+    </script>
+</form>
+
+</body>
+</html>
