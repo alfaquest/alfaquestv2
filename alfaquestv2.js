@@ -75,11 +75,11 @@ const alpha1 = "abcdefghijklmnopqrstuvyz".split('');
 if (!word1.startsWith("a")) {
     res.status(404).send()
     console.error("Incorrect Answer or Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   } else if(countryList.indexOf(word1) === -1){
     res.status(404).send()
     console.error("Incorrect Answer or Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
   const alphaUsed1 = [word1.charAt(0), 'w', 'x'];
@@ -118,7 +118,7 @@ if (!word1.startsWith("a")) {
   if(common1 === ""){
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
   } else {
     console.log("next letter1: " + common1[0].toUpperCase());
     const next1 = common1[0].toUpperCase()
@@ -142,8 +142,8 @@ app.post('/api/word2',
         console.log("Second Word equals: " + word2)
     } else if(countryList.indexOf(word2) === -1){
         res.status(404).send()
-        //console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }
 
     // Add word1 first letter to alphaUsed ARRAY
@@ -152,7 +152,7 @@ app.post('/api/word2',
 
     if (alphaUsed2.length === 26) {
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
     }
 
@@ -184,7 +184,7 @@ app.post('/api/word2',
     if(common2 === ""){
     res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
       } else {
       console.log("next letter2 :" + common2[0].toUpperCase())
       const next1 = common2[0].toUpperCase()
@@ -206,7 +206,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 } else if(countryList.indexOf(word3) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
   // Add word2 first letter to alphaUsed ARRAY
@@ -215,7 +215,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 
   if (alphaUsed3.length === 26) {
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
   }
 
@@ -247,7 +247,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 if(common3 === ""){
 res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
   } else {
   console.log("next letter3:" + common3[0].toUpperCase());
   const next1 = common3[0].toUpperCase()
@@ -271,7 +271,7 @@ res.status(400).send()
     } else if(countryList.indexOf(word4) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
     let alphaUsed4 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), 'w', 'x'];
@@ -279,7 +279,7 @@ res.status(400).send()
 
     if (alphaUsed4.length === 26){
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
     }
     
@@ -308,7 +308,7 @@ res.status(400).send()
     if(common4 === ""){
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else { 
     console.log("next letter4:" + common4[0].toUpperCase());
     const next1 = common4[0].toUpperCase()
@@ -331,7 +331,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
     } else if(countryList.indexOf(word5) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }
 
     let alphaUsed5 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), 'w', 'x'];
@@ -339,7 +339,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 
     if (alphaUsed5.length == 26) {
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
     }
 
@@ -369,7 +369,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
     if(common5 === ""){
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
      console.log("next letter5:" + common5[0].toUpperCase());  
      const next1 = common5[0].toUpperCase()
@@ -391,7 +391,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
     } else if(countryList.indexOf(word6) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
     let alphaUsed6 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0),
@@ -402,7 +402,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 
     if (alphaUsed6.length == 26){
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
   }
 
@@ -431,7 +431,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
     if(common6 === ""){
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
       } else {
       console.log("next letter6:" + common6[0].toUpperCase());
       const next1 = common6[0].toUpperCase()
@@ -454,7 +454,7 @@ app.post('/api/word7',
     } else if(countryList.indexOf(word7) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
     // Add word3 first letter to alphaUsed ARRAY
@@ -466,7 +466,7 @@ app.post('/api/word7',
 
     if (alphaUsed7.length == 26){
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");    
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);    
     
 
 }
@@ -498,7 +498,7 @@ app.post('/api/word7',
     if(common7 === ""){
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
       } else {
         console.log("next letter7:" + common7[0].toUpperCase());
         const next1 = common7[0].toUpperCase()
@@ -520,7 +520,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
     } else if(countryList.indexOf(word8) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
     let alphaUsed8 = [word1.charAt(0), word2.charAt(0), word3.charAt(0),
@@ -532,7 +532,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 
     if (alphaUsed8.length == 26){
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
 }
 
@@ -561,7 +561,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
     if(common8 === ""){
         res.status(400).send(),send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
       } else {
       console.log("next letter8:" + common8[0].toUpperCase());
       const next1 = common8[0].toUpperCase()
@@ -584,7 +584,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 } else if(countryList.indexOf(word9) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
   let alphaUsed9 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), 'w', 'x'];
@@ -593,7 +593,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 
   if (alphaUsed9.length == 26) {
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
   }
 
@@ -623,7 +623,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
   if(common9 === ""){
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
     console.log("next letter9:" + common9[0].toUpperCase());
     const next1 = common9[0].toUpperCase()
@@ -646,7 +646,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 } else if(countryList.indexOf(word10) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
   let alphaUsed10 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), word10.charAt(0), 'w', 'x'];
@@ -655,7 +655,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 
   if (alphaUsed10.length == 26) {
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
   }
 
@@ -685,7 +685,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
   if(common10 === ""){
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
   } else {
     console.log("next letter10: " + common10[0].toUpperCase());
     const next1 = common10[0].toUpperCase()
@@ -708,7 +708,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 } else if(countryList.indexOf(word11) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
   let alphaUsed11 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0),
@@ -719,7 +719,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 
   if (alphaUsed11.length == 26){
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
   }
 
@@ -748,7 +748,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
   if(common11 === ""){
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
   } else {
     console.log("next letter11: " + common11[0].toUpperCase());
     const next1 = common11[0].toUpperCase()
@@ -771,7 +771,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 } else if(countryList.indexOf(word12) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
   let alphaUsed12 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), word10.charAt(0), word11.charAt(0), word12.charAt(0), 'w', 'x'];
@@ -780,7 +780,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 
   if (alphaUsed12.length == 26) {
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
   }
 
@@ -810,7 +810,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
   if(common12 === ""){
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
   } else {
     console.log("next letter12: " + common12[0].toUpperCase());
     const next1 = common12[0].toUpperCase()
@@ -833,7 +833,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 } else if(countryList.indexOf(word13) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
   let alphaUsed13 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0),
@@ -845,7 +845,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
 
   if (alphaUsed13.length == 26){
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
   }
 
@@ -874,7 +874,7 @@ return next(new Error('You have ran out of letters, GAME OVER'));
   if(common13 === ""){
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
   } else {
     console.log("next letter13: " + common13[0].toUpperCase());
     const next1 = common13[0].toUpperCase()
@@ -896,7 +896,7 @@ if (word14.charAt(0) == common13.charAt(0)) {
 } else if(countryList.indexOf(word14) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
 const alphaUsed14 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), word10.charAt(0), word11.charAt(0), word12.charAt(0), word13.charAt(0), word14.charAt(0), 'w', 'x'];
@@ -905,7 +905,7 @@ console.log("letters used: "+alphaUsed14);
 
 if (alphaUsed14.length == 26){
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
   }
 
@@ -934,7 +934,7 @@ for (let jkl = 0; jkl < word14.length; jkl++) {
 if(common14 === "") {
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
 } else {
     console.log("next letter14: " + common14[0].toUpperCase());
     const next1 = common14[0].toUpperCase()
@@ -958,7 +958,7 @@ app.post('/api/word15',
     } else if(countryList.indexOf(word15) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
     // Add word3
@@ -971,7 +971,7 @@ app.post('/api/word15',
 
     if (alphaUsed15.length == 26) {
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
     }
 
@@ -1005,7 +1005,7 @@ app.post('/api/word15',
     if(common15 === "") {
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
         console.log("next letter15: " + common15[0].toUpperCase());
         const next1 = common15[0].toUpperCase()
@@ -1029,7 +1029,7 @@ app.post('/api/word16',
 } else if(countryList.indexOf(word16) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
 // Add word3
@@ -1043,7 +1043,7 @@ console.log("letters used: "+alphaUsed16);
 
 if (alphaUsed16.length == 26){
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
     }
 
@@ -1078,7 +1078,7 @@ for (let jkl = 0; jkl < word16.length; jkl++) {
 if(common16 === "") {
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
 } else {
     console.log("next letter16: " + common16[0].toUpperCase());
     const next1 = common16[0].toUpperCase()
@@ -1103,7 +1103,7 @@ if (word17.charAt(0) === common16.charAt(0) && countryList.indexOf(word17) === 1
 } else if(countryList.indexOf(word17) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
 // Add
@@ -1119,7 +1119,7 @@ console.log("letters used: "+alphaUsed17);
 
 if (alphaUsed17.length === 26) {
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
 }
 
@@ -1155,7 +1155,7 @@ for (let jkl = 0; jkl < word17.length; jkl++) {
 if(common17 === "") {
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
 } else {
     console.log("next letter17: " + common17[0].toUpperCase());
     const next1 = common17[0].toUpperCase()
@@ -1180,7 +1180,7 @@ if (word18.charAt(0) === common17.charAt(0) && countryList.indexOf(word18) === 1
 } else if(countryList.indexOf(word18) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
 // Add
@@ -1196,7 +1196,7 @@ console.log("letters used: "+alphaUsed18);
 
 if (alphaUsed18.length === 26) {
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
 }
 
@@ -1232,7 +1232,7 @@ for (let jkl = 0; jkl < word18.length; jkl++) {
 if(common18 === "") {
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
 } else {
     console.log("next letter18: " + common18[0].toUpperCase());
     const next1 = common18[0].toUpperCase()
@@ -1257,7 +1257,7 @@ if (word19.charAt(0) === common18.charAt(0) && countryList.indexOf(word19) === 1
 } else if(countryList.indexOf(word19) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
 // Add
@@ -1273,7 +1273,7 @@ console.log("letters used: "+alphaUsed19);
 
 if (alphaUsed19.length == 26){
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
     }
 
@@ -1308,7 +1308,7 @@ for (let jkl = 0; jkl < word19.length; jkl++) {
 if(common19 === "") {
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
 } else {
     console.log("next letter19: " + common19[0].toUpperCase());
     const next1 = common19[0].toUpperCase()
@@ -1332,7 +1332,7 @@ if (word20.charAt(0) === common19.charAt(0) && countryList.indexOf(word20) === 1
 } else if(countryList.indexOf(word20) === -1){
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
-    return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }
 
 // Add
@@ -1354,7 +1354,7 @@ console.log("letters used: "+alphaUsed20);
 
 if (alphaUsed20.length == 26){
     res.status(201).send()
-    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+    console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
     
     }
 
@@ -1389,7 +1389,7 @@ for (let jkl = 0; jkl < word20.length; jkl++) {
 if(common20 === "") {
     res.status(400).send()
     console.error("You have ran out of letters, GAME OVER");
-    return next(new Error('You have ran out of letters, GAME OVER'));
+    return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
 } else {
     console.log("next letter20: " + common20[0].toUpperCase());
     const next1 = common20[0].toUpperCase()
@@ -1412,7 +1412,7 @@ app.post('/api/word21',
     } else if(countryList.indexOf(word21) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
     let alphaUsed21 = [
@@ -1427,7 +1427,7 @@ app.post('/api/word21',
 
     if (alphaUsed21.length == 26){
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
     }
 
@@ -1456,7 +1456,7 @@ app.post('/api/word21',
     if(common21 === "") {
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
         console.log("next letter21: " + common21[0].toUpperCase());
         const next1 = common21[0].toUpperCase()
@@ -1482,7 +1482,7 @@ app.post('/api/word22',
     } else if(countryList.indexOf(word22) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
     // Add
@@ -1504,7 +1504,7 @@ app.post('/api/word22',
 
     if (alphaUsed22.length == 26){
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
         }
 
@@ -1539,7 +1539,7 @@ app.post('/api/word22',
     if(common22 === "") {
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
         console.log("next letter22: " + common22[0].toUpperCase());
         const next1 = common22[0].toUpperCase()
@@ -1565,7 +1565,7 @@ app.post('/api/word23',
     } else if(countryList.indexOf(word23) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
 
@@ -1586,7 +1586,7 @@ app.post('/api/word23',
 
     if (alphaUsed23.length == 26){
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
     }
     console.log("letters used: "+alphaUsed23);
@@ -1622,7 +1622,7 @@ app.post('/api/word23',
     if(common23 === "") {
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
         console.log("next letter24: " + common24[0].toUpperCase());
         const next1 = common24[0].toUpperCase()
@@ -1648,7 +1648,7 @@ app.post('/api/word24',
     } else if(countryList.indexOf(word24) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
 
@@ -1664,7 +1664,7 @@ app.post('/api/word24',
 
     if (alphaUsed24.length == 26){
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
     }
     let j24 = 0;
@@ -1692,7 +1692,7 @@ app.post('/api/word24',
     if(common24 === "") {
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
         console.log("next letter25: " + common25[0].toUpperCase());
         const next1 = common25[0].toUpperCase()
@@ -1718,7 +1718,7 @@ app.post('/api/word25',
     } else if(countryList.indexOf(word25) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
     const alphaUsed25 = [
@@ -1734,7 +1734,7 @@ app.post('/api/word25',
 
     if (alphaUsed25.length == 26) {
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
     }
 
@@ -1764,7 +1764,7 @@ app.post('/api/word25',
     if(common25 === "") {
         res.status(400).send()
         console.error("You have ran out of letters, GAME OVER");
-return next(new Error('You have ran out of letters, GAME OVER'));
+return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
         console.log("next letter26: " + common26[0].toUpperCase());
         const next1 = common26[0].toUpperCase()
@@ -1790,7 +1790,7 @@ app.post('/api/word26',
     } else if(countryList.indexOf(word26) === -1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        return next(new Error('Incorrect Answer or Spelling, GAME OVER'));
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }
 
     const alphaUsed26 = [
@@ -1801,7 +1801,7 @@ app.post('/api/word26',
 
     if (alphaUsed26.length == 26){
         res.status(201).send()
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
+        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!"); process.exit(0);
         
     }
 
