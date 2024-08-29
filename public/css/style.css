@@ -51,7 +51,7 @@ p {
   -webkit-text-stroke-color: black;
   background: rgba(2, 51, 2, 0.3);
   background-size: auto;
-  width:40%;
+  width:60%;
   margin: auto;
   text-align: center;
   transform: translateY(500%);
@@ -64,7 +64,7 @@ p {
     -webkit-text-stroke-color: black;
     background: rgba(2, 51, 2, 0.3);
     background-size: auto;
-    width:40%;
+    width:60%;
     margin: auto;
     text-align: center;
     transform: translateY(500%);
