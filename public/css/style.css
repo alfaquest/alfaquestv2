@@ -1,16 +1,21 @@
 body {
-    padding: 180px;
-    background-color: #fcf805;
-    background-image: url(../images/world2.jpg);
+    padding: 10px;
+    background-color: #030300;
+    /*background-image: url(../images/world2.jpg);*/
     background-repeat: no-repeat;
     background-size: cover;
 }
  
 h1 {
-    color: #257a08;
-    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    color: #9bb7f5;
+    font: 36px "Lucida Grande", Helvetica, Arial, sans-serif;
+    -webkit-text-stroke-width: 0.2px;
+    -webkit-text-stroke-color: black;
+    width:17%;
+    background: rgba(43, 241, 43, 0.3);
+    background-size: auto;
     left: 20px;
-    text-align: center;
+    text-align: left;
 }
 
 h4 {
@@ -19,7 +24,7 @@ h4 {
   background: rgba(2, 51, 2, 0.3);
   left: 250px;
   width:12%;
-  text-align: center;
+  text-align: left;
   margin-top: 20%;
 }
 
@@ -28,8 +33,7 @@ h5 {
     font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
     left: 250px; 
     background: rgba(2, 51, 2, 0.3);
-    margin: auto;
-    text-align: center;   
+    text-align: left;   
 }
 
 p {
@@ -40,8 +44,7 @@ p {
     background: rgba(2, 51, 2, 0.3);
     background-size: auto;
     width:52%;
-    margin: auto;
-    text-align: center;
+    text-align: left;
 }
 
 #next {
@@ -51,9 +54,8 @@ p {
   -webkit-text-stroke-color: black;
   background: rgba(2, 51, 2, 0.3);
   background-size: auto;
-  width:60%;
-  margin: auto;
-  text-align: center;
+  width:75%;
+  text-align: left;
   transform: translateY(500%);
 }
 
@@ -64,37 +66,47 @@ p {
     -webkit-text-stroke-color: black;
     background: rgba(2, 51, 2, 0.3);
     background-size: auto;
-    width:60%;
-    margin: auto;
-    text-align: center;
+    width:75%;
+    text-align: left;
     transform: translateY(500%);
+
+}
+
+#restart {
+  color: cyan;
+    font: 25px "Lucida Grande", Helvetica, Arial, sans-serif;  
+    -webkit-text-stroke-width: 0.2px;
+    -webkit-text-stroke-color: black;
+    background: rgba(2, 51, 2, 0.3);
+    background-size: auto;
+    width: 25%;
+    text-align: left;
+    /*transform: translateY(1020%);*/
 
 }
 
 #fourhundred {
   color: red;
-    font: 45px "Lucida Grande", Helvetica, Arial, sans-serif;  
+    font: 30px "Lucida Grande", Helvetica, Arial, sans-serif;  
     -webkit-text-stroke-width: 0.2px;
     -webkit-text-stroke-color: black;
     background: rgba(2, 51, 2, 0.8);
     background-size: auto;
-    width:28%;
-    margin: auto;
-    text-align: center;
-    transform: translateY(-25%);
+    width:50%;
+    text-align: left;
+    /*transform: translateY(-25%);*/
   }
 
   #fourhundredfour {
     color: red;
-    font: 45px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 30px "Lucida Grande", Helvetica, Arial, sans-serif;
     -webkit-text-stroke-width: 0.2px;
     -webkit-text-stroke-color: black;
     background: rgba(2, 51, 2, 0.8);
     background-size: auto;
-    width:40%;
-    margin: auto;
-    text-align: center;
-    transform: translateY(-25%);
+    width:60%;
+    text-align: left;
+    /*transform: translateY(-25%);*/
   }
 
   #twohundred {
@@ -105,8 +117,7 @@ p {
     background: rgba(2, 51, 2, 0.8);
     background-size: auto;
     width:25%;
-    margin: auto;
-    text-align: center;
+    text-align: left;
     transform: translateY(-15%);
   }
 
@@ -117,7 +128,7 @@ p {
     -webkit-text-stroke-color: black;
     background: rgba(2, 51, 2, 0.8);
     left: 250px;
-    text-align: center;
+    text-align: left;
     transform: translateY(-25%);
   }
 
@@ -126,34 +137,29 @@ p {
 input {
     font: 32px "Lucida Grande", Helvetica, Arial, sans-serif;
     position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
     display: block;
-    margin: auto;
     border: 5px solid #95bf47;
     border-radius: 5px;
     width: 350px;
     border: 1px solid #1e07e6;
-    text-align: center;
+    text-align: left;
 }
 
 input::placeholder {
     font: 30px "Lucida Grande", Helvetica, Arial, sans-serif;
-    text-align: center;
+    text-align: left;
   }
 
 button {
     font: 30px "Lucida Grande", Helvetica, Arial, sans-serif;
     border-radius: 12px;
     display: block;
-    margin: auto;
     position: absolute;
-    left: 45%;
 
     transform: translateY(120%);
     width: 160px;
     border: 1px solid #73AD21;
-    text-align: center; 
+    text-align: left; 
 }
 
 button:hover {
@@ -190,16 +196,15 @@ a:visited {
 
 #help{
   color: rgb(201, 172, 7);
-  font: 25px "Lucida Grande", Helvetica, Arial, sans-serif;  
+  font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;  
   -webkit-text-stroke-width: 0.2px;
   -webkit-text-stroke-color: black;
   background: rgba(2, 51, 2, 0.8);
   background-size: auto;
-  transform: translateY(750%);
+  /*transform: translateY(750%);*/
   display: block;
   width: 25%;
-  margin: auto;
-  text-align: center;
+  text-align: left;
 }
 
 #source{
@@ -209,11 +214,10 @@ a:visited {
   -webkit-text-stroke-color: black;
   background: rgba(2, 51, 2, 0.8);
   background-size: auto;
-  transform: translateY(1300%);
+  /*transform: translateY(1300%);*/
   display: block;
   width: 10%;
-  margin: auto;
-  text-align: center;
+  text-align: left;
 }
 
 .footer {
@@ -222,10 +226,10 @@ a:visited {
   font-family: "Monospace";
   left: 0;
   bottom: 0;
-  width: 100%;
+  width: 40%;
   background-color: rgb(7, 161, 28);
   color: white;
-  text-align: center;
+  text-align: left;
 }
 
 .wrapper {
