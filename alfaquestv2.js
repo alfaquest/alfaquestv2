@@ -1743,9 +1743,9 @@ app.post('/api/word23',
         console.error("You have ran out of letters, GAME OVER");
 return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
-        console.log("next letter24: " + common24[0].toUpperCase());
-        const next1 = common24[0].toUpperCase()
-        const used1 = alphaUsed24;
+        console.log("next letter23: " + common23[0].toUpperCase());
+        const next1 = common23[0].toUpperCase()
+        const used1 = alphaUsed23;
         body1 = next1
         body2 = used1
         res.status(200).send(""+body1+" " +""+body2+"")
@@ -1820,9 +1820,9 @@ app.post('/api/word24',
         console.error("You have ran out of letters, GAME OVER");
 return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
-        console.log("next letter25: " + common25[0].toUpperCase());
-        const next1 = common25[0].toUpperCase()
-        const used1 = alphaUsed25;
+        console.log("next letter24: " + common24[0].toUpperCase());
+        const next1 = common24[0].toUpperCase()
+        const used1 = alphaUsed24;
         body1 = next1
         body2 = used1
         res.status(200).send(""+body1+" " +""+body2+"")
@@ -1899,9 +1899,9 @@ app.post('/api/word25',
         console.error("You have ran out of letters, GAME OVER");
 return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1));
     } else {
-        console.log("next letter26: " + common26[0].toUpperCase());
-        const next1 = common26[0].toUpperCase()
-        const used1 = alphaUsed26;
+        console.log("next letter25: " + common25[0].toUpperCase());
+        const next1 = common25[0].toUpperCase()
+        const used1 = alphaUsed25;
         body1 = next1
         body2 = used1
         res.status(200).send(""+body1+" " +""+body2+"")
