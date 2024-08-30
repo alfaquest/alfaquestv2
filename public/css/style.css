@@ -142,7 +142,7 @@ button {
     text-align: left; 
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 600px) {
   p {
     color: #ebe707;
     font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -153,7 +153,7 @@ button {
   }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 600px) {
   #intro {
     color: #ebe707;
     font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
@@ -164,13 +164,13 @@ button {
   }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 600px) {
   button {
       width: 130px;
   }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 600px) {
   #restart {
       width: 130px;
       margin: 0;
@@ -178,7 +178,7 @@ button {
   }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 600px) {
   input {
     font: 32px "Lucida Grande", Helvetica, Arial, sans-serif;
     position: absolute;
@@ -249,7 +249,7 @@ a:visited {
     padding: 5px;
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 600px) {
   #help {
       width: 130px;
       margin: 0;
@@ -257,7 +257,7 @@ a:visited {
   }
 }
 
-@media only screen and (max-width: 400px) {
+@media only screen and (max-width: 600px) {
   #source {
       width: 130px;
       margin: 0;
