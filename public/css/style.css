@@ -72,10 +72,10 @@ p {
     -webkit-text-stroke-color: black;
     background: rgba(2, 51, 2, 0.3);
     background-size: auto;
-    width: 8%;
+    width: 15%;
     text-align: center;
     margin: 0;
-    padding: 0;
+    padding: 5px;
     /*transform: translateY(1020%);*/
 
 }
@@ -173,6 +173,8 @@ button {
 @media only screen and (max-width: 400px) {
   #restart {
       width: 130px;
+      margin: 0;
+      padding: 0px;
   }
 }
 
@@ -228,30 +230,38 @@ a:visited {
     -webkit-text-stroke-color: black;
     background: rgba(2, 51, 2, 0.3);
     background-size: auto;
-    width: 8%;
+    width: 15%;
     text-align: center;
+    margin: 0;
+    padding: 4px;
 }
 
 #source{
   color: cyan;
-    font: 17px "Lucida Grande", Helvetica, Arial, sans-serif;  
+    font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;  
     -webkit-text-stroke-width: 0.2px;
     -webkit-text-stroke-color: black;
     background: rgba(2, 51, 2, 0.3);
     background-size: auto;
-    width: 8%;
+    width: 15%;
     text-align: center;
+    margin: 0;
+    padding: 5px;
 }
 
 @media only screen and (max-width: 400px) {
   #help {
       width: 130px;
+      margin: 0;
+      padding: 0px;
   }
 }
 
 @media only screen and (max-width: 400px) {
   #source {
       width: 130px;
+      margin: 0;
+      padding: 0px;
   }
 }
 
