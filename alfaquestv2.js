@@ -144,8 +144,11 @@ app.post('/api/word2',
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    } else if(word2 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }
-
     // Add word1 first letter to alphaUsed ARRAY
     let alphaUsed2 = [word1.charAt(0), word2.charAt(0), 'w', 'x'];
     console.log("letters used: "+alphaUsed2);
@@ -207,7 +210,12 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  }else if(word3 === word2 
+    || word3 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+} 
 
   // Add word2 first letter to alphaUsed ARRAY
   const alphaUsed3 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), 'w', 'x'];
@@ -272,7 +280,11 @@ res.status(400).send()
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }  else if(word4 === word3 || word4 === word2 || word4 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    }
 
     let alphaUsed4 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), 'w', 'x'];
     console.log("letters used: "+alphaUsed4);
@@ -329,6 +341,10 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
     if (word5.charAt(0) === common4.charAt(0) && countryList.indexOf(word5) === 1) {
         console.log("Fifth Word equals: " + word5);
     } else if(countryList.indexOf(word5) === -1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    }  else if(word5 === word4 || word5 === word3 || word5 === word2 || word5 === word1){
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
@@ -392,7 +408,11 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+    } else if(word6 === word5 || word6 === word4 || word6 === word3 || word6 === word2 || word6 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    }
 
     let alphaUsed6 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0),
         word5.charAt(0), word6.charAt(0), 'w', 'x'
@@ -455,7 +475,11 @@ app.post('/api/word7',
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }  else if(word7 === word6 || word7 === word5 || word7 === word4 || word7 === word3 || word7 === word2 || word7 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    }
 
     // Add word3 first letter to alphaUsed ARRAY
     let alphaUsed7 = [word1.charAt(0), word2.charAt(0), word3.charAt(0),
@@ -521,7 +545,12 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }   else if(word8 === word7 || word8 === word6 || word8 === word5 || word8 === word4 || 
+        word8 === word3 || word8 === word2 || word8 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    }
 
     let alphaUsed8 = [word1.charAt(0), word2.charAt(0), word3.charAt(0),
         word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0),
@@ -585,7 +614,12 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  } else if(word9 === word8 || word9 === word7 || word9 === word6 || word9 === word5 || word9 === word4 || 
+    word9 === word3 || word9 === word2 || word9 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+}
 
   let alphaUsed9 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), 'w', 'x'];
 
@@ -647,7 +681,12 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  } else if(word10 === word9 || word10 === word8 || word10 === word7 || word10 === word6 || word10 === word5 || 
+    word10 === word4 || word10 === word3 || word10 === word2 || word10 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+}
 
   let alphaUsed10 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), word10.charAt(0), 'w', 'x'];
 
@@ -709,7 +748,12 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  }  else if(word11 === word10 || word11 === word9 || word11 === word8 || word11 === word7 || word11 === word6 || word11 === word5 || 
+    word11 === word4 || word11 === word3 || word11 === word2 || word11 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+}
 
   let alphaUsed11 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0),
     word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), word10.charAt(0), word11.charAt(0), 'w', 'x'
@@ -772,7 +816,12 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  } else if(word12 === word11 || word12 === word10 || word12 === word9 || word12 === word8 || word12 === word7 || word12 === word6 || 
+    word12 === word5 || word12 === word4 || word12 === word3 || word12 === word2 || word12 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+} 
 
   let alphaUsed12 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), word10.charAt(0), word11.charAt(0), word12.charAt(0), 'w', 'x'];
 
@@ -834,7 +883,12 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  }  else if(word13 === word12 || word13 === word11 || word13 === word10 || word13 === word9 || word13 === word8 || word13 === word7 || word13 === word6 
+    || word13 === word5 || word13 === word4 || word13 === word3 || word13 === word2 || word13 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+} 
 
   let alphaUsed13 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0),
     word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), word10.charAt(0), word11.charAt(0),
@@ -897,7 +951,13 @@ if (word14.charAt(0) == common13.charAt(0)) {
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  }   else if(word14 === word13 || word14 === word12 || word14 === word11 || word14 === word10 || word14 === word9 || 
+    word14 === word8 || word14 === word7 || word14 === word6 || word14 === word5 || word14 === word4 || 
+    word14 === word3 || word14 === word2 || word14 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+} 
 
 const alphaUsed14 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), word10.charAt(0), word11.charAt(0), word12.charAt(0), word13.charAt(0), word14.charAt(0), 'w', 'x'];
 
@@ -959,7 +1019,13 @@ app.post('/api/word15',
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }    else if(word15 === word14 || word15 === word13 || word15 === word12 || word15 === word11 || word15 === word10 || 
+        word15 === word9 || word15 === word8 || word15 === word7 || word15 === word6 || word15 === word5 || 
+        word15 === word4 || word15 === word3 || word15 === word2 || word15 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    } 
 
     // Add word3
     // first letter
@@ -1030,7 +1096,14 @@ app.post('/api/word16',
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  } else if(word16 === word15 || word16 === word14 || word16 === word13 || word16 === word12 || word16 === word11 || 
+    word16 === word10 || word16 === word9 || word16 === word8 || word16 === word7 || word16 === word6 || 
+    word16 === word5 || word16 === word4 || word16 === word3 || word16 === word2 || word16 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+} 
+
 
 // Add word3
 // first
@@ -1104,7 +1177,14 @@ if (word17.charAt(0) === common16.charAt(0) && countryList.indexOf(word17) === 1
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  }  else if(word17 === word16 || word17 === word15 || word17 === word14 || word17 === word13 || word17 === word12 || 
+    word17 === word11 || word17 === word10 || word17 === word9 || word17 === word8 || 
+    word17 === word7 || word17 === word6 || word17 === word5 || word17 === word4 || word17 === word3 || 
+    word17 === word2 || word17 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+} 
 
 // Add
 // word3
@@ -1181,7 +1261,13 @@ if (word18.charAt(0) === common17.charAt(0) && countryList.indexOf(word18) === 1
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  }   else if(word18 === word17 || word18 === word16 || word18 === word15 || word18 === word14 || word18 === word13 || word18 === word12 || 
+    word18 === word11 || word18 === word10 || word18 === word9 || word18 === word8 || word18 === word7 || 
+    word18 === word6 || word18 === word5 || word18 === word4 || word18 === word3 || word18 === word2 || word18 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+} 
 
 // Add
 // word3
@@ -1258,7 +1344,13 @@ if (word19.charAt(0) === common18.charAt(0) && countryList.indexOf(word19) === 1
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  }   else if(word19 === word18 || word19 === word17 || word19 === word16 || word19 === word15 || word19 === word14 || 
+    word19 === word13 || word19 === word12 || word19 === word11 || word19 === word10 || word19 === word9 || word19 === word8 || 
+    word19 === word7 || word19 === word6 || word19 === word5 || word19 === word4 || word19 === word3 || word19 === word2 || word19 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+} 
 
 // Add
 // word3
@@ -1333,7 +1425,13 @@ if (word20.charAt(0) === common19.charAt(0) && countryList.indexOf(word20) === 1
     res.status(404).send()
     console.error("Invalid String or Incorrect Spelling, GAME OVER");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-  }
+  } else if(word20 === word19 || word20 === word18 || word20 === word17 || word20 === word16 || word20 === word15 || word20 === word14 || 
+    word20 === word13 || word20 === word12 || word20 === word11 || word20 === word10 || word20 === word9 || word20 === word8 || word20 === word7 || 
+    word20 === word6 || word20 === word5 || word20 === word4 || word20 === word3 || word20 === word2 || word20 === word1){
+    res.status(404).send()
+    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+} 
 
 // Add
 // word3
@@ -1413,7 +1511,14 @@ app.post('/api/word21',
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }  else if(word21 === word20 || word21 === word19 || word21 === word18 || word21 === word17 || word21 === word16 || 
+        word21 === word15 || word21 === word14 || word21 === word13 || word21 === word12 || word21 === word11 || word21 === word10 || 
+        word21 === word9 || word21 === word8 || word21 === word7 || word21 === word6 || word21 === word5 || word21 === word4 || 
+        word21 === word3 || word21 === word2 || word21 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    } 
 
     let alphaUsed21 = [
         word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0),
@@ -1483,7 +1588,14 @@ app.post('/api/word22',
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }   else if(word22 === word21 || word22 === word20 || word22 === word19 || word22 === word18 || word22 === word17 || word22 === word16 || 
+        word22 === word15 || word22 === word14 || word22 === word13 || word22 === word12 || word22 === word11 || word22 === word10 || word22 === word9 || 
+        word22 === word8 || word22 === word7 || word22 === word6 || word22 === word5 || word22 === word4 || word22 === word3 || 
+        word22 === word2 || word22 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    } 
 
     // Add
     // word3
@@ -1566,7 +1678,14 @@ app.post('/api/word23',
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }    else if(word23 === word22 || word23 === word21 || word23 === word20 || word23 === word19 || word23 === word18 || word23 === word17 || 
+        word23 === word16 || word23 === word15 || word23 === word14 || word23 === word13 || word23 === word12 || word23 === word11 || word23 === word10 || 
+        word23 === word9 || word23 === word8 || word23 === word7 || word23 === word6 || word23 === word5 || word23 ===  word4 || word23 === word3 || 
+        word23 === word2 || word23 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    } 
 
 
     // Add
@@ -1649,7 +1768,14 @@ app.post('/api/word24',
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }     else if(word24 === word23 || word24 === word22 || word24 === word21 || word24 === word20 || word24 === word19 || 
+        word24 === word18 || word24 === word17 || word24 === word16 || word24 === word15 || word24 === word14 || word24 === word13 || 
+        word24 === word12 || word24 === word11 || word24 === word10 || word24 === word9 || word24 === word8 || word24 === word7 || 
+        word24 === word6 || word24 === word5 || word24 === word4 || word24 === word3 || word24 === word2 || word24 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    } 
 
 
     const alphaUsed24 = [
@@ -1719,7 +1845,14 @@ app.post('/api/word25',
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }     else if(word25 === word24 || word25 === word23 || word25 === word22 || word25 === word21 || word25 === word20 || word25 === word19 || 
+        word25 === word18 || word25 === word17 || word25 === word16 || word25 === word15 || word25 === word14 || word25 === word13 || word25 === word12 || 
+        word25 === word11 || word25 === word10 || word25 === word9 || word25 === word8 || word25 === word7 || word25 === word6 || word25 === word5 || 
+        word25 === word4 || word25 === word3 || word25 === word2 || word25 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    } 
 
     const alphaUsed25 = [
         word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0),
@@ -1791,7 +1924,15 @@ app.post('/api/word26',
         res.status(404).send()
         console.error("Invalid String or Incorrect Spelling, GAME OVER");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
-      }
+      }      else if(word26 === word25 || word26 === word24 || word26 === word23 || word26 === word22 || word26 === word21 || 
+        word26 === word20 || word26 === word19 || word26 === word18 || word26 === word17 || word26 === word16 || word26 === word15 || 
+        word26 === word14 || word26 === word13 || word26 === word12 || word26 === word11 || word26 === word10 || word26 === word9 || 
+        word26 === word8 || word26 === word7 || word26 === word6 || word26 === word5 || word26 === word4 || word26 === word3 || 
+        word26 === word2 || word26 === word1){
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
+    } 
 
     const alphaUsed26 = [
         word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0), word5.charAt(0), word6.charAt(0), word7.charAt(0), word8.charAt(0), word9.charAt(0), word10.charAt(0), word11.charAt(0), word12.charAt(0), word13.charAt(0), word14.charAt(0), word15.charAt(0), word16.charAt(0), word17.charAt(0), word18.charAt(0), word19.charAt(0), word20.charAt(0), word21.charAt(0), word22.charAt(0), word23.charAt(0), word24.charAt(0), word25.charAt(0), word26.charAt(0), 'w', 'x'
