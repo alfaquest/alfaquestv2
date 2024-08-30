@@ -39,6 +39,15 @@ p {
     padding: 0;
 }
 
+#intro {
+  color: #ebe707;
+    font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;
+    width:85%;
+    text-align: left;
+    margin: 0;
+    padding: 0;
+}
+
 #next {
   color: cyan;
   font: 20px "Lucida Grande", Helvetica, Arial, sans-serif;  
@@ -134,6 +143,28 @@ button {
 }
 
 @media only screen and (max-width: 400px) {
+  p {
+    color: #ebe707;
+    font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
+    width:85%;
+    text-align: left;
+    margin: 5px;
+    padding: 0;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  #intro {
+    color: #ebe707;
+    font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;
+    width:85%;
+    text-align: left;
+    margin: 5px;
+    padding: 0;
+  }
+}
+
+@media only screen and (max-width: 400px) {
   button {
       width: 130px;
   }
@@ -142,6 +173,19 @@ button {
 @media only screen and (max-width: 400px) {
   #restart {
       width: 130px;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  input {
+    font: 32px "Lucida Grande", Helvetica, Arial, sans-serif;
+    position: absolute;
+    display: block;
+    border: 5px solid #95bf47;
+    border-radius: 5px;
+    width: 280px;
+    border: 1px solid #1e07e6;
+    text-align: left;
   }
 }
 
