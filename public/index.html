@@ -1,23 +1,27 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
-
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
 </head>    
 <body>
 
 <form>
     <h1>ΑLΦΑQUΕSΤ</h1> 
-    <p> Prototype Game Category: Countries of the World.<br>
-        24 round game, 24 available unique starting letters.<br>
-        No countries currently exist with starting letters 'W' & 'X'.<br>
-        Letters 'W' & 'X' and all punctuation marks are ignored<br> in this edition of ΑLΦΑQUΕSΤ.
+    <p> In this edition of ΑLΦΑQUΕSΤ:<br>
+        - Prototype Game Category: Countries of the World.<br>
+        - 24 round game, 24 available unique starting letters.<br>
+        - No countries currently exist with starting letters 'W' & 'X'.<br>
+        - Letters 'W' & 'X' and all punctuation marks are ignored
         </p>
 
         <div class="blink"><p id="twohundred">Answer Accepted</p></div>
         <div class="blink"><p id="twohundredone"></p></div>
         <div class="blink"><p id="fourhundred"></p></div>
         <div class="blink"><p id="fourhundredfour"></p></div>
+
+        <p>
 
         <input type="text" placeholder="Type Answer 1..." id="word1" autofocus>
         <button type="button" id="word1btn" onclick="getInputValue1()">SUBMIT</button>
@@ -71,17 +75,23 @@
         <button type="button" id="word25btn" onclick="getInputValue25()">SUBMIT</button>
         <input type="text" placeholder="Type Answer 26..." id="word26">
         <button type="button" id="word26btn" onclick="getInputValue26()">SUBMIT</button>
+        </p>
 
         <p id="next"></p><p id="used"></p>
 <br>
-<br><br><br>
-<button id="restart" onClick="window.location.reload();">RESTART ALΦAQUEST</button>
-<br><br><br><br>
+<br>
+<br>
+<p><button id="restart" onClick="window.location.reload();">RESTART ALΦAQUEST</button></p>
+<br>
+<br>
+<br>
+<br>
 
 
         <p id="help">
             <a href="./helpv2.html" target="_blank"><body link="cyan" vlink="yellow" alink="green">ALΦAQUEST EXPLAINED</a>
-           </p><br>
+           </p>
+           
    <p id="source">
             <a href="https://en.wikipedia.org/wiki/List_of_sovereign_states" target="_blank">source reference</a>
         </p>
