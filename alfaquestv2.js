@@ -827,7 +827,7 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
         console.log('POST parameter received are: ', word12)
          
 
-        if (word12.charAt(0) != common13.charAt(0)) {
+        if (word12.charAt(0) != common11.charAt(0)) {
             res.status(404).send()
             console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
             return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
