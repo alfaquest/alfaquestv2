@@ -65,6 +65,28 @@ p {
 
 }
 
+@media only screen and (max-width: 600px) {
+  #next {
+    color: cyan;
+    font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;  
+    width:90%;
+    text-align: left;
+    transform: translateY(500%);
+  }
+}
+
+
+@media only screen and (max-width: 600px) {
+#used {
+  color: cyan;
+    font: 15px "Lucida Grande", Helvetica, Arial, sans-serif;  
+    width:100%;
+    text-align: left;
+    transform: translateY(500%);
+
+  }
+}
+
 #restart {
   color: cyan;
     font: 17px "Lucida Grande", Helvetica, Arial, sans-serif;  

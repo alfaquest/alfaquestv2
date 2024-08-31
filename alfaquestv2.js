@@ -134,21 +134,23 @@ app.post('/api/word2',
     (req, res, next) => {
         const word2 = req.body.toLowerCase();
         console.log('POST parameter received are: ', word2)
-        
 
     // TODO handle with ARRAY
 
-    if (word2.charAt(0) === common1.charAt(0) && countryList.indexOf(word2) === 1) {
-        console.log("Second Word equals: " + word2)
+    if (word2.charAt(0) != common1.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word2) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(word2 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }
+
     // Add word1 first letter to alphaUsed ARRAY
     let alphaUsed2 = [word1.charAt(0), word2.charAt(0), 'w', 'x'];
     console.log("letters used: "+alphaUsed2);
@@ -203,12 +205,14 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
             const word3 = req.body.toLowerCase();
             console.log('POST parameter received are: ', word3)
 
-  if (word3.charAt(0) === common2.charAt(0) && countryList.indexOf(word3) === 1) {
-    console.log("Third Word equals: " + word3);
+    if (word3.charAt(0) != common2.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 
 } else if(countryList.indexOf(word3) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }else if(word3 === word2 
     || word3 === word1){
@@ -272,17 +276,17 @@ res.status(400).send()
         const word4 = req.body.toLowerCase();
         console.log('POST parameter received are: ', word4)
          
-        
-
-        if (word4.charAt(0) === common3.charAt(0) && countryList.indexOf(word4) === 1) {
-        console.log("Fourth Word equals: " + word4);
+        if (word4.charAt(0) != common3.charAt(0)) {
+            res.status(404).send()
+            console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+            return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word4) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }  else if(word4 === word3 || word4 === word2 || word4 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }
 
@@ -337,16 +341,17 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
             const word5 = req.body.toLowerCase();
             console.log('POST parameter received are: ', word5)
              
-
-    if (word5.charAt(0) === common4.charAt(0) && countryList.indexOf(word5) === 1) {
-        console.log("Fifth Word equals: " + word5);
+            if (word5.charAt(0) != common4.charAt(0)) {
+                res.status(404).send()
+                console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+                return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word5) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }  else if(word5 === word4 || word5 === word3 || word5 === word2 || word5 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }
 
@@ -402,15 +407,17 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
             console.log('POST parameter received are: ', word6)
              
 
-    if (word6.charAt(0) === common5.charAt(0) && countryList.indexOf(word6) === 1) {
-        console.log("Sixth Word equals: " + word6);
+            if (word6.charAt(0) != common5.charAt(0)) {
+                res.status(404).send()
+                console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+                return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word6) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(word6 === word5 || word6 === word4 || word6 === word3 || word6 === word2 || word6 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }
 
@@ -469,15 +476,17 @@ app.post('/api/word7',
         console.log('POST parameter received are: ', word7)
          
 
-    if (word7.charAt(0) === common6.charAt(0) && countryList.indexOf(word7) === 1) {
-        console.log("Seventh Word equals: " + word7);
+        if (word7.charAt(0) != common6.charAt(0)) {
+            res.status(404).send()
+            console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+            return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word7) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }  else if(word7 === word6 || word7 === word5 || word7 === word4 || word7 === word3 || word7 === word2 || word7 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }
 
@@ -539,16 +548,18 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
             console.log('POST parameter received are: ', word8)
              
 
-    if (word8.charAt(0) === common7.charAt(0) && countryList.indexOf(word8) === 1) {
-        console.log("Eight Word equals: " + word8);
+            if (word8.charAt(0) != common7.charAt(0)) {
+                res.status(404).send()
+                console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+                return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word8) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }   else if(word8 === word7 || word8 === word6 || word8 === word5 || word8 === word4 || 
         word8 === word3 || word8 === word2 || word8 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     }
 
@@ -608,16 +619,18 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
             console.log('POST parameter received are: ', word9)
              
 
-  if (word9.charAt(0) == common8.charAt(0)) {
-    console.log("Ninth Word equals: " + word9);
+            if (word9.charAt(0) != common8.charAt(0)) {
+                res.status(404).send()
+                console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+                return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word9) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   } else if(word9 === word8 || word9 === word7 || word9 === word6 || word9 === word5 || word9 === word4 || 
     word9 === word3 || word9 === word2 || word9 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 }
 
@@ -675,16 +688,18 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
         console.log('POST parameter received are: ', word10)
          
 
-  if (word10.charAt(0) === common9.charAt(0) && countryList.indexOf(word10) === 1) {
-    console.log("Tenth Word equals: " + word10);
+        if (word10.charAt(0) != common9.charAt(0)) {
+            res.status(404).send()
+            console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+            return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word10) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   } else if(word10 === word9 || word10 === word8 || word10 === word7 || word10 === word6 || word10 === word5 || 
     word10 === word4 || word10 === word3 || word10 === word2 || word10 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 }
 
@@ -742,16 +757,18 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
         console.log('POST parameter received are: ', word11)
          
 
-  if (word11.charAt(0) === common10.charAt(0) && countryList.indexOf(word11) === 1) {
-    console.log("Eleventh Word equals: " + word11);
+        if (word11.charAt(0) != common10.charAt(0)) {
+            res.status(404).send()
+            console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+            return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word11) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }  else if(word11 === word10 || word11 === word9 || word11 === word8 || word11 === word7 || word11 === word6 || word11 === word5 || 
     word11 === word4 || word11 === word3 || word11 === word2 || word11 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 }
 
@@ -810,16 +827,18 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
         console.log('POST parameter received are: ', word12)
          
 
-  if (word12.charAt(0) === common11.charAt(0) && countryList.indexOf(word12) === 1) {
-    console.log("Twelfth Word equals: " + word12);
+        if (word12.charAt(0) != common13.charAt(0)) {
+            res.status(404).send()
+            console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+            return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word12) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   } else if(word12 === word11 || word12 === word10 || word12 === word9 || word12 === word8 || word12 === word7 || word12 === word6 || 
     word12 === word5 || word12 === word4 || word12 === word3 || word12 === word2 || word12 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } 
 
@@ -877,16 +896,18 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
         console.log('POST parameter received are: ', word13)
          
 
-  if (word13.charAt(0) === common12.charAt(0) && countryList.indexOf(word13) === 1) {
-    console.log("Thirteenth Word equals: " + word13);
+        if (word13.charAt(0) != common12.charAt(0)) {
+            res.status(404).send()
+            console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+            return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word13) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }  else if(word13 === word12 || word13 === word11 || word13 === word10 || word13 === word9 || word13 === word8 || word13 === word7 || word13 === word6 
     || word13 === word5 || word13 === word4 || word13 === word3 || word13 === word2 || word13 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } 
 
@@ -945,17 +966,19 @@ return next(new Error('You have ran out of letters, GAME OVER'), process.exit(1)
         console.log('POST parameter received are: ', word14)
          
 
-if (word14.charAt(0) == common13.charAt(0)) {
-    console.log("Fourteenth Word equals: " + word14);
+        if (word14.charAt(0) != common13.charAt(0)) {
+            res.status(404).send()
+            console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+            return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word14) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }   else if(word14 === word13 || word14 === word12 || word14 === word11 || word14 === word10 || word14 === word9 || 
     word14 === word8 || word14 === word7 || word14 === word6 || word14 === word5 || word14 === word4 || 
     word14 === word3 || word14 === word2 || word14 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } 
 
@@ -1013,17 +1036,19 @@ app.post('/api/word15',
         console.log('POST parameter received are: ', word15)
          
 
-    if (word15.charAt(0) === common14.charAt(0) && countryList.indexOf(word15) === 1) {
-        console.log("Fifteenth Word equals: " + word15);
+        if (word15.charAt(0) != common14.charAt(0)) {
+            res.status(404).send()
+            console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+            return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1))
     } else if(countryList.indexOf(word15) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }    else if(word15 === word14 || word15 === word13 || word15 === word12 || word15 === word11 || word15 === word10 || 
         word15 === word9 || word15 === word8 || word15 === word7 || word15 === word6 || word15 === word5 || 
         word15 === word4 || word15 === word3 || word15 === word2 || word15 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } 
 
@@ -1090,17 +1115,19 @@ app.post('/api/word16',
         console.log('POST parameter received are: ', word16)
          
 
- if (word16.charAt(0) === common15.charAt(0) && countryList.indexOf(word16) === 1) {
-    console.log("Sixteenth Word equals: " + word16);
+    if (word16.charAt(0) != common15.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word16) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   } else if(word16 === word15 || word16 === word14 || word16 === word13 || word16 === word12 || word16 === word11 || 
     word16 === word10 || word16 === word9 || word16 === word8 || word16 === word7 || word16 === word6 || 
     word16 === word5 || word16 === word4 || word16 === word3 || word16 === word2 || word16 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } 
 
@@ -1171,18 +1198,20 @@ app.post('/api/word17',
         console.log('POST parameter received are: ', word17)
          
 
-if (word17.charAt(0) === common16.charAt(0) && countryList.indexOf(word17) === 1) {
-    console.log("Seventeenth Word equals: " + word17);
+    if (word17.charAt(0) != common16.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word17) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }  else if(word17 === word16 || word17 === word15 || word17 === word14 || word17 === word13 || word17 === word12 || 
     word17 === word11 || word17 === word10 || word17 === word9 || word17 === word8 || 
     word17 === word7 || word17 === word6 || word17 === word5 || word17 === word4 || word17 === word3 || 
     word17 === word2 || word17 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } 
 
@@ -1255,17 +1284,19 @@ app.post('/api/word18',
         console.log('POST parameter received are: ', word18)
          
 
-if (word18.charAt(0) === common17.charAt(0) && countryList.indexOf(word18) === 1) {
-    console.log("Eighteenth Word equals: " + word18);
+    if (word18.charAt(0) != common17.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word18) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }   else if(word18 === word17 || word18 === word16 || word18 === word15 || word18 === word14 || word18 === word13 || word18 === word12 || 
     word18 === word11 || word18 === word10 || word18 === word9 || word18 === word8 || word18 === word7 || 
     word18 === word6 || word18 === word5 || word18 === word4 || word18 === word3 || word18 === word2 || word18 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } 
 
@@ -1338,17 +1369,19 @@ app.post('/api/word19',
         console.log('POST parameter received are: ', word19)
          
 
-if (word19.charAt(0) === common18.charAt(0) && countryList.indexOf(word19) === 1) {
-    console.log("Nineteenth Word equals: " + word19);
+    if (word19.charAt(0) != common18.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word19) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   }   else if(word19 === word18 || word19 === word17 || word19 === word16 || word19 === word15 || word19 === word14 || 
     word19 === word13 || word19 === word12 || word19 === word11 || word19 === word10 || word19 === word9 || word19 === word8 || 
     word19 === word7 || word19 === word6 || word19 === word5 || word19 === word4 || word19 === word3 || word19 === word2 || word19 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } 
 
@@ -1419,17 +1452,19 @@ app.post('/api/word20',
         console.log('POST parameter received are: ', word20)
          
 
-if (word20.charAt(0) === common19.charAt(0) && countryList.indexOf(word20) === 1) {
-    console.log("Twentieth Word equals: " + word20);
+    if (word20.charAt(0) != common19.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } else if(countryList.indexOf(word20) === -1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
   } else if(word20 === word19 || word20 === word18 || word20 === word17 || word20 === word16 || word20 === word15 || word20 === word14 || 
     word20 === word13 || word20 === word12 || word20 === word11 || word20 === word10 || word20 === word9 || word20 === word8 || word20 === word7 || 
     word20 === word6 || word20 === word5 || word20 === word4 || word20 === word3 || word20 === word2 || word20 === word1){
     res.status(404).send()
-    console.error("Invalid String or Incorrect Spelling, GAME OVER");
+    console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
     return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
 } 
 
@@ -1505,18 +1540,20 @@ app.post('/api/word21',
         console.log('POST parameter received are: ', word21)
          
 
-    if (word21.charAt(0) === common20.charAt(0) && countryList.indexOf(word21) === 1) {
-        console.log("Twenty First Word equals: " + word21);
+    if (word21.charAt(0) != common20.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word21) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }  else if(word21 === word20 || word21 === word19 || word21 === word18 || word21 === word17 || word21 === word16 || 
         word21 === word15 || word21 === word14 || word21 === word13 || word21 === word12 || word21 === word11 || word21 === word10 || 
         word21 === word9 || word21 === word8 || word21 === word7 || word21 === word6 || word21 === word5 || word21 === word4 || 
         word21 === word3 || word21 === word2 || word21 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } 
 
@@ -1582,18 +1619,20 @@ app.post('/api/word22',
         console.log('POST parameter received are: ', word22)
          
 
-    if (word22.charAt(0) === common21.charAt(0) && countryList.indexOf(word22) === 1) {
-        console.log("Twenty Second Word equals: " + word22);
+    if (word22.charAt(0) != common21.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word22) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }   else if(word22 === word21 || word22 === word20 || word22 === word19 || word22 === word18 || word22 === word17 || word22 === word16 || 
         word22 === word15 || word22 === word14 || word22 === word13 || word22 === word12 || word22 === word11 || word22 === word10 || word22 === word9 || 
         word22 === word8 || word22 === word7 || word22 === word6 || word22 === word5 || word22 === word4 || word22 === word3 || 
         word22 === word2 || word22 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } 
 
@@ -1671,19 +1710,20 @@ app.post('/api/word23',
         const word23 = req.body.toLowerCase();
         console.log('POST parameter received are: ', word23)
          
-
-    if (word23.charAt(0) === common22.charAt(0) && countryList.indexOf(word23) === 1) {
-        console.log("Twenty Third Word equals: " + word23);
+    if (word23.charAt(0) != common22.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word23) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }    else if(word23 === word22 || word23 === word21 || word23 === word20 || word23 === word19 || word23 === word18 || word23 === word17 || 
         word23 === word16 || word23 === word15 || word23 === word14 || word23 === word13 || word23 === word12 || word23 === word11 || word23 === word10 || 
         word23 === word9 || word23 === word8 || word23 === word7 || word23 === word6 || word23 === word5 || word23 ===  word4 || word23 === word3 || 
         word23 === word2 || word23 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } 
 
@@ -1761,19 +1801,20 @@ app.post('/api/word24',
         const word24 = req.body.toLowerCase();
         console.log('POST parameter received are: ', word24)
          
-
-    if (word24.charAt(0) === common23.charAt(0) && countryList.indexOf(word24) === 1) {
-        console.log("Twenty Fourth Word equals: " + word24);
+    if (word24.charAt(0) != common23.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word24) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }     else if(word24 === word23 || word24 === word22 || word24 === word21 || word24 === word20 || word24 === word19 || 
         word24 === word18 || word24 === word17 || word24 === word16 || word24 === word15 || word24 === word14 || word24 === word13 || 
         word24 === word12 || word24 === word11 || word24 === word10 || word24 === word9 || word24 === word8 || word24 === word7 || 
         word24 === word6 || word24 === word5 || word24 === word4 || word24 === word3 || word24 === word2 || word24 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } 
 
@@ -1838,19 +1879,20 @@ app.post('/api/word25',
         const word25 = req.body.toLowerCase();
         console.log('POST parameter received are: ', word25)
          
-
-    if (word25.charAt(0) === common24.charAt(0) && countryList.indexOf(word25) === 1) {
-        console.log("Twenty Fifth Word equals: " + word25);
+    if (word25.charAt(0) != common24.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word25) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }     else if(word25 === word24 || word25 === word23 || word25 === word22 || word25 === word21 || word25 === word20 || word25 === word19 || 
         word25 === word18 || word25 === word17 || word25 === word16 || word25 === word15 || word25 === word14 || word25 === word13 || word25 === word12 || 
         word25 === word11 || word25 === word10 || word25 === word9 || word25 === word8 || word25 === word7 || word25 === word6 || word25 === word5 || 
         word25 === word4 || word25 === word3 || word25 === word2 || word25 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } 
 
@@ -1918,11 +1960,13 @@ app.post('/api/word26',
         console.log('POST parameter received are: ', word26)
          
 
-    if (word26.charAt(0) === common25.charAt(0) && countryList.indexOf(word26) === 1) {
-        console.log("Twenty Sixth Word equals: " + word26);
+    if (word26.charAt(0) != common25.charAt(0)) {
+        res.status(404).send()
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - char mismatch");
+        return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } else if(countryList.indexOf(word26) === -1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word not on list");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
       }      else if(word26 === word25 || word26 === word24 || word26 === word23 || word26 === word22 || word26 === word21 || 
         word26 === word20 || word26 === word19 || word26 === word18 || word26 === word17 || word26 === word16 || word26 === word15 || 
@@ -1930,7 +1974,7 @@ app.post('/api/word26',
         word26 === word8 || word26 === word7 || word26 === word6 || word26 === word5 || word26 === word4 || word26 === word3 || 
         word26 === word2 || word26 === word1){
         res.status(404).send()
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
+        console.error("Invalid String or Incorrect Spelling, GAME OVER - word already used");
         return next(new Error('Incorrect Answer or Spelling, GAME OVER'), process.exit(1));
     } 
 
