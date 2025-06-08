@@ -97,9 +97,10 @@ Let's look at the given examples to understand better.
 
 ### Strategy to Win
 
-To win, we need to choose countries at each step that allow 
-us to keep finding new starting letters until all 24 are 
-used. 
+To win, we need to choose countries at each step that 
+allow us to keep finding new starting letters until 
+all 24 are used.
+
 This requires:
 
 1. **Tracking Used Letters**: Always know which starting 
@@ -113,9 +114,9 @@ right.
 
 ### Potential Approach
 
-Let's attempt to construct a sequence that might lead us to use 
-all 24 letters. We'll need to be strategic in our choices to avoid 
-dead ends.
+Let's attempt to construct a sequence that might lead us to 
+use all 24 letters. We'll need to be strategic in our 
+choices to avoid dead ends.
 
 **Initial Steps:**
 
@@ -154,8 +155,8 @@ dead ends.
    - Next letters in "Haiti": A, I, T, I
      - All used. Dead end.
 
-This path ends after 7 rounds. Not good. Let's try a different 
-path after step 3.
+This path ends after 7 rounds. Not good. Let's try a 
+different path after step 3.
 
 **Alternative Path:**
 
@@ -217,18 +218,20 @@ path after step 3.
       G is not in this list. 
       So G is new.
 
-Wait, checking used letters: A, L, T, O, M, Y, E, C, N, P, R, U. G 
-is not there. So next is G.
+Wait, checking used letters: A, L, T, O, M, Y, E, C, N, P, R, U. 
+G is not there. So next is G.
 
-But we've already used G? Wait no, looking back, step 6 was 'E', 
-then 'C', then 'N', 'P', 'R', 'U'. 'G' hasn't been used yet.
+But we've already used G? Wait no, looking back, 
+step 6 was 'E', then 'C', then 'N', 'P', 'R', 'U'. 
+'G' hasn't been used yet.
 
 13. Choose a country starting with 'G': "Germany"
     - Used: A, L, T, O, M, Y, E, C, N, P, R, U, G
     - Next letters in "Germany": E, R, M, A, N, Y
       - All used. Dead end.
 
-Hmm, stuck at 13. Maybe choose a different country at step 12.
+Hmm, stuck at 13. Maybe choose a different country at 
+step 12.
 
 Alternative at step 12:
 
@@ -242,9 +245,10 @@ Alternative at step 12:
     - Next letters in "Kazakhstan": A, Z, A, K, H, S, T, A, N
       - Z is new.
 
-14. Choose a country starting with 'Z': "Zambia" (Zambia is incorrect, 
-it's "Zambia" is not a country; correct is "Zambia" is misspelled, 
-should be "Zambia" is "Zambia"? Wait, the correct name is "Zambia".)
+14. Choose a country starting with 'Z': "Zambia" (Zambia is
+incorrect, it's "Zambia" is not a country; correct is 
+"Zambia" is misspelled, should be "Zambia" is "Zambia"? 
+Wait, the correct name is "Zambia".)
     - Used: A, L, T, O, M, Y, E, C, N, P, R, U, K, Z
     - Next letters in "Zambia": A, M, B, I, A
       - B is new.
