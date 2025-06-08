@@ -281,7 +281,7 @@ a:visited {
     width: 32%;
     text-align: center;
     margin: 0;
-    padding: 4px;
+    padding: 5px;
 }
 
 @media only screen and (max-width: 600px) {
@@ -295,6 +295,14 @@ a:visited {
 @media only screen and (max-width: 600px) {
   #source {
       width: 130px;
+      margin: 0;
+      padding: 0px;
+  }
+}
+
+@media only screen and (max-width: 1800px) {
+  #aqvai {
+      width: 300px;
       margin: 0;
       padding: 0px;
   }
