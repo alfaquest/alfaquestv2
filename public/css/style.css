@@ -271,6 +271,19 @@ a:visited {
     padding: 5px;
 }
 
+#aqvai{
+  color: cyan;
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;  
+    -webkit-text-stroke-width: 0.2px;
+    -webkit-text-stroke-color: black;
+    background: rgba(2, 51, 2, 0.3);
+    background-size: auto;
+    width: 32%;
+    text-align: center;
+    margin: 0;
+    padding: 4px;
+}
+
 @media only screen and (max-width: 600px) {
   #help {
       width: 130px;
