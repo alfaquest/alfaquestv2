@@ -15,7 +15,7 @@ app.use((req, res, next) => {
 
 const PORT = 80;
 
-app.use(express.static('public'));
+app.use(express.static(__dirname));
 
 app.listen(PORT, (error) =>{
     if(!error)

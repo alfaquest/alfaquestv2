@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="icon" href="images/favicon.ico" type="image/x-icon"/>
+</head>    
+<body>
+<form>
+<pre><p id =intro>
+When Deep Seek AI Played ΑLΦΑQUΕSΤ and failed 
+(transcript):
+
+Alright, let's tackle this game step by step. I'm going to 
+approach it methodically to understand how to navigate 
+through the sequence of words without hitting a dead end 
+before using all 24 possible starting letters for countries.
+
+### Understanding the Game Rules
+
+1. **Category**: Countries of the world. There are 24 
+possible starting letters for country names 
+(from 'A' to 'Z', excluding letters that no country 
+starts with).
+   
+2. **Starting the Game**: The first country must 
+start with 'A'.
+
+3. **Subsequent Countries**: The starting letter of 
+the next country is determined by the letters in the 
+current country's name, in order, skipping any letters 
+that have already been used as starting letters in previous 
+rounds.
+
+4. **Game Over**: If a chosen country's letters all 
+correspond to already-used starting letters, the game 
+ends unsuccessfully.
+
+5. **Winning**: Successfully choose countries that allow 
+you to use all 24 starting letters without hitting a 
+dead end.
+
+### Example Analysis
+
+Let's look at the given examples to understand better.
+
+**Example 1: Game Over after 5 rounds**
+
+1. Albania (A)
+   - Used letters: A
+   - Next letters in "Albania": L, B, A, N, I, A
+     - Skip A (used), next is L.
+
+2. Latvia (L)
+   - Used letters: A, L
+   - Next letters in "Latvia": A, T, V, I, A
+     - A used, next is T.
+
+3. Tonga (T)
+   - Used letters: A, L, T
+   - Next letters in "Tonga": O, N, G, A
+     - O is new.
+
+4. Oman (O)
+   - Used letters: A, L, T, O
+   - Next letters in "Oman": M, A, N
+     - M is new.
+
+5. Malta (M)
+   - Used letters: A, L, T, O, M
+   - Next letters in "Malta": A, L, T, A
+     - All have been used. Game Over.
+
+**Example 2: Continues to round 6**
+
+1. Albania (A)
+   - Used: A
+   - Next: L
+
+2. Latvia (L)
+   - Used: A, L
+   - Next: T
+
+3. Tonga (T)
+   - Used: A, L, T
+   - Next: O
+
+4. Oman (O)
+   - Used: A, L, T, O
+   - Next: M
+
+5. Malaysia (M)
+   - Used: A, L, T, O, M
+   - Next letters in "Malaysia": A, L, A, Y, S, I, A
+     - A, L used, next is Y.
+   - Next starting letter: Y.
+
+### Strategy to Win
+
+To win, we need to choose countries at each step that 
+allow us to keep finding new starting letters until 
+all 24 are used.
+
+This requires:
+
+1. **Tracking Used Letters**: Always know which starting 
+letters have been used.
+2. **Choosing Countries with Unused Letters**: Prefer 
+countries that have multiple unique letters, increasing the 
+chances of finding an unused one.
+3. **Order of Letters**: The next starting letter is the first 
+unused letter in the current country's name, reading left to 
+right.
+
+### Potential Approach
+
+Let's attempt to construct a sequence that might lead us to 
+use all 24 letters. We'll need to be strategic in our 
+choices to avoid dead ends.
+
+**Initial Steps:**
+
+1. Start with 'A': Albania
+   - Used: A
+   - Next: L
+
+2. Choose a country starting with 'L': Let's pick 
+"Liberia" (has many letters)
+   - Used: A, L
+   - Next letters in "Liberia": I, B, E, R, I, A
+     - I is new.
+
+3. Choose a country starting with 'I': "Italy"
+   - Used: A, L, I
+   - Next letters in "Italy": T, A, L, Y
+     - T is new.
+
+4. Choose a country starting with 'T': "Tanzania"
+   - Used: A, L, I, T
+   - Next letters in "Tanzania": A, N, Z, A, N, I, A
+     - N is new.
+
+5. Choose a country starting with 'N': "Nigeria"
+   - Used: A, L, I, T, N
+   - Next letters in "Nigeria": I, G, E, R, I, A
+     - I used, next is G.
+
+6. Choose a country starting with 'G': "Ghana"
+   - Used: A, L, I, T, N, G
+   - Next letters in "Ghana": H, A, N, A
+     - H is new.
+
+7. Choose a country starting with 'H': "Haiti"
+   - Used: A, L, I, T, N, G, H
+   - Next letters in "Haiti": A, I, T, I
+     - All used. Dead end.
+
+This path ends after 7 rounds. Not good. Let's try a 
+different path after step 3.
+
+**Alternative Path:**
+
+1. Albania (A)
+   - Used: A
+   - Next: L
+
+2. Latvia (L)
+   - Used: A, L
+   - Next: T
+
+3. Tonga (T)
+   - Used: A, L, T
+   - Next: O
+
+4. Oman (O)
+   - Used: A, L, T, O
+   - Next: M
+
+5. Malaysia (M)
+   - Used: A, L, T, O, M
+   - Next: Y
+
+6. Choose a country starting with 'Y': "Yemen"
+   - Used: A, L, T, O, M, Y
+   - Next letters in "Yemen": E, M, E, N
+     - E is new.
+
+7. Choose a country starting with 'E': "Ecuador"
+   - Used: A, L, T, O, M, Y, E
+   - Next letters in "Ecuador": C, U, A, D, O, R
+     - C is new.
+
+8. Choose a country starting with 'C': "Canada"
+   - Used: A, L, T, O, M, Y, E, C
+   - Next letters in "Canada": A, N, A, D, A
+     - N is new.
+
+9. Choose a country starting with 'N': "Nepal"
+   - Used: A, L, T, O, M, Y, E, C, N
+   - Next letters in "Nepal": E, P, A, L
+     - E used, next is P.
+
+10. Choose a country starting with 'P': "Portugal"
+    - Used: A, L, T, O, M, Y, E, C, N, P
+    - Next letters in "Portugal": O, R, T, U, G, A, L
+      - O used, next is R.
+
+11. Choose a country starting with 'R': "Russia"
+    - Used: A, L, T, O, M, Y, E, C, N, P, R
+    - Next letters in "Russia": U, S, S, I, A
+      - U is new.
+
+12. Choose a country starting with 'U': "Uganda"
+    - Used: A, L, T, O, M, Y, E, C, N, P, R, U
+    - Next letters in "Uganda": G, A, N, D, A
+      - G is new (but G is already used? Wait, used letters 
+      are A, L, T, O, M, Y, E, C, N, P, R, U. 
+      G is not in this list. 
+      So G is new.
+
+Wait, checking used letters: A, L, T, O, M, Y, E, C, N, P, R, U. 
+G is not there. So next is G.
+
+But we've already used G? Wait no, looking back, 
+step 6 was 'E', then 'C', then 'N', 'P', 'R', 'U'. 
+'G' hasn't been used yet.
+
+13. Choose a country starting with 'G': "Germany"
+    - Used: A, L, T, O, M, Y, E, C, N, P, R, U, G
+    - Next letters in "Germany": E, R, M, A, N, Y
+      - All used. Dead end.
+
+Hmm, stuck at 13. Maybe choose a different country at 
+step 12.
+
+Alternative at step 12:
+
+12. Choose a country starting with 'U': "Ukraine"
+    - Used: A, L, T, O, M, Y, E, C, N, P, R, U
+    - Next letters in "Ukraine": K, R, A, I, N, E
+      - K is new.
+
+13. Choose a country starting with 'K': "Kazakhstan"
+    - Used: A, L, T, O, M, Y, E, C, N, P, R, U, K
+    - Next letters in "Kazakhstan": A, Z, A, K, H, S, T, A, N
+      - Z is new.
+
+14. Choose a country starting with 'Z': "Zambia" (Zambia is
+incorrect, it's "Zambia" is not a country; correct is 
+"Zambia" is misspelled, should be "Zambia" is "Zambia"? 
+Wait, the correct name is "Zambia".)
+    - Used: A, L, T, O, M, Y, E, C, N, P, R, U, K, Z
+    - Next letters in "Zambia": A, M, B, I, A
+      - B is new.
+
+15. Choose a country starting with 'B': "Brazil"
+    - Used: A, L, T, O, M, Y, E, C, N, P, R, U, K, Z, B
+    - Next letters in "Brazil": R, A, Z, I, L
+      - All used. Dead end.
+
+Still stuck at 15. Maybe choose a different 'B' country.
+
+15. Choose a country starting with 'B': "Belgium"
+    - Used: A, L, T, O, M, Y, E, C, N, P, R, U, K, Z, B
+    - Next letters in "Belgium": E, L, G, I, U, M
+      - G is new.
+
+16. Choose a country starting with 'G': "Greece"
+    - Used: A, L, T, O, M, Y, E, C, N, P, R, U, K, Z, B, G
+    - Next letters in "Greece": R, E, E, C, E
+      - All used. Dead end.
+
+This path gets us to 16 used letters. Better, but not all 24.
+
+### Identifying the Challenge
+
+The main challenge is that as we progress, the pool of 
+unused starting letters diminishes, 
+and it becomes harder to find countries that contain 
+unused letters in their names. 
+To reach all 24, we need:
+
+- Countries with many unique letters.
+- Strategic selection to expose new letters late in the game.
+- Possibly longer country names to increase the chance of 
+having unused letters.
+
+### Optimal Path Attempt
+
+Let me try another path, aiming for longer country names 
+early to expose more letters.
+
+1. Afghanistan (A)
+   - Used: A
+   - Next: F
+
+2. France (F)
+   - Used: A, F
+   - Next: R
+
+3. Russia (R)
+   - Used: A, F, R
+   - Next: U
+
+4. United States (U)
+   - Used: A, F, R, U
+   - Next: N
+
+5. Netherlands (N)
+   - Used: A, F, R, U, N
+   - Next: E
+
+6. Ethiopia (E)
+   - Used: A, F, R, U, N, E
+   - Next: T
+
+7. Thailand (T)
+   - Used: A, F, R, U, N, E, T
+   - Next: H
+
+8. Hungary (H)
+   - Used: A, F, R, U, N, E, T, H
+   - Next: U (used), next is G
+
+9. Germany (G)
+   - Used: A, F, R, U, N, E, T, H, G
+   - Next: E (used), next is R (used), next is M
+
+10. Mexico (M)
+    - Used: A, F, R, U, N, E, T, H, G, M
+    - Next: E (used), next is X
+
+11. Need a country starting with 'X': "X" is tricky. Only a 
+few countries start with X, like "X" is not common.
+Maybe "X" is not a starting letter for any country? Wait, no 
+country starts with X. So dead end here.
+
+This path fails at 'X'. Maybe avoid getting to 'X'.
+
+Alternative at step 10:
+
+10. Choose a different 'M' country: "Madagascar"
+    - Used: A, F, R, U, N, E, T, H, G, M
+    - Next letters in "Madagascar": A, D, A, G, A, S, C, A, R
+      - D is new.
+
+11. Choose a country starting with 'D': "Denmark"
+    - Used: A, F, R, U, N, E, T, H, G, M, D
+    - Next letters in "Denmark": E, N, M, A, R, K
+      - K is new.
+
+12. Choose a country starting with 'K': "Kazakhstan"
+    - Used: A, F, R, U, N, E, T, H, G, M, D, K
+    - Next letters in "Kazakhstan": A, Z, A, K, H, S, T, A, N
+      - Z is new.
+
+13. Choose a country starting with 'Z': "Zambia"
+    - Used: A, F, R, U, N, E, T, H, G, M, D, K, Z
+    - Next letters in "Zambia": A, M, B, I, A
+      - B is new.
+
+14. Choose a country starting with 'B': "Belgium"
+    - Used: A, F, R, U, N, E, T, H, G, M, D, K, Z, B
+    - Next letters in "Belgium": E, L, G, I, U, M
+      - L is new.
+
+15. Choose a country starting with 'L': "Laos"
+    - Used: A, F, R, U, N, E, T, H, G, M, D, K, Z, B, L
+    - Next letters in "Laos": A, O, S
+      - O is new.
+
+16. Choose a country starting with 'O': "Oman"
+    - Used: A, F, R, U, N, E, T, H, G, M, D, K, Z, B, L, O
+    - Next letters in "Oman": M, A, N
+      - All used. Dead end.
+
+This gets us to 16 used letters again. It seems challenging
+to reach all 24.
+
+### Conclusion
+
+After several attempts, the highest number of unique 
+starting letters I've been able to chain is around 16 
+out of the possible 24. 
+It seems extremely difficult to cover all letters 
+without hitting a dead end, given the constraints. 
+The game likely has very few winning sequences, if any, 
+where all 24 letters are used successfully.
+
+Therefore, completing the game by using all 24 starting 
+letters for countries is highly non-trivial and may require 
+an exceptionally strategic sequence of country choices 
+that expose new letters at every possible opportunity 
+while avoiding letters that lead to dead ends prematurely.
+
+**Final Answer**: Constructing a sequence that uses all 
+24 starting letters for countries is possible in theory but 
+requires an extremely strategic and likely non-obvious 
+sequence of country choices. 
+Most paths will result in a dead end before all letters 
+are used, as demonstrated in the attempted sequences 
+above. 
+A winning sequence would need to carefully manage the 
+order of letter usage to ensure that new letters are 
+always available until the very end.
+</p></pre>
+</form>  
+</body>
+
+</html>	
