@@ -13,20 +13,22 @@ app.use((req, res, next) => {
     next();
   });
 
-const port = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000;
 
-// If running in a build/CI environment, don't start the server.
-const isCI = !!process.env.CI || process.env.NETLIFY === 'true';
+// ... app setup ...
 
-if (!isCI) {
-  app.listen(port, () => {
-    console.log(`Listening on ${port}`);
+// only start server when NOT in CI/build environment
+if (!process.env.CI) {
+  app.listen(PORT, (error) => {
+    if (error) {
+      console.error('Server start error', error);
+      process.exit(1);
+    }
+    console.log(`Server listening on ${PORT}`);
   });
 } else {
   console.log('Skipping server start in CI/build environment');
 }
-module.exports = app; // if you want to import it in tests or serverless handlers
-app.use(express.static(__dirname));
 
 app.listen(PORT, (error) =>{
     if(!error)
