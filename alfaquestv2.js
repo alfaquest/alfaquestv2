@@ -13,7 +13,12 @@ app.use((req, res, next) => {
     next();
   });
 
-const PORT = 80;
+const PORT = process.env.PORT || 3000;
+if (process.env.SKIP_SERVER !== '1') {
+  app.listen(PORT, () => console.log(`Listening on ${PORT}`));
+} else {
+  console.log('Skipping server listen because SKIP_SERVER=1');
+}
 
 app.use(express.static(__dirname));
 
