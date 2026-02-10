@@ -16,14 +16,13 @@ app.use((req, res, next) => {
 //app.use('/', indexRouter);
 
 const PORT = 3000;
-app.use(express.static('public'));
-app.listen(PORT, (error) =>{
-    if(!error)
-        console.log("Server is Successfully Running, and App is listening on port "+ PORT)
-    else 
-        console.log("Error occurred, server can't start", error);
-    }
-);
+if (!process.env.NETLIFY) {
+  app.listen(PORT, () => {
+    console.log(`Server listening on ${PORT}`);
+  });
+} else {
+  console.log('NETLIFY build detected — skipping app.listen()');
+}
 
 const readline = require('readline');
 
