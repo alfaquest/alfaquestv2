@@ -13,13 +13,19 @@ app.use((req, res, next) => {
     next();
   });
 
-const PORT = process.env.PORT || 3000;
-if (process.env.SKIP_SERVER !== '1') {
-  app.listen(PORT, () => console.log(`Listening on ${PORT}`));
-} else {
-  console.log('Skipping server listen because SKIP_SERVER=1');
-}
+const port = process.env.PORT || 3000;
 
+// If running in a build/CI environment, don't start the server.
+const isCI = !!process.env.CI || process.env.NETLIFY === 'true';
+
+if (!isCI) {
+  app.listen(port, () => {
+    console.log(`Listening on ${port}`);
+  });
+} else {
+  console.log('Skipping server start in CI/build environment');
+}
+module.exports = app; // if you want to import it in tests or serverless handlers
 app.use(express.static(__dirname));
 
 app.listen(PORT, (error) =>{
