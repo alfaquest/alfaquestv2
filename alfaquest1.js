@@ -16,12 +16,9 @@ app.use((req, res, next) => {
 //app.use('/', indexRouter);
 
 const PORT = 3000;
-if (!process.env.NETLIFY) {
-  app.listen(PORT, () => {
-    console.log(`Server listening on ${PORT}`);
-  });
-} else {
-  console.log('NETLIFY build detected — skipping app.listen()');
+if (process.env.NETLIFY) {
+  console.log('Netlify build: skipping server start.');
+  process.exit(0); // exit successfully so build can continue
 }
 
 const readline = require('readline');
