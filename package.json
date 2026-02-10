@@ -5,7 +5,7 @@
   "main": "alfaquestv2.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node alfaquestv2.js",
+    "build": "node alfaquestv2.js",
     "perry": "node alfaquestv2.js",
     "dada": "node alfaquestv2.js"
   },
