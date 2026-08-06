@@ -4,21 +4,32 @@
   "description": "",
   "main": "alfaquestv2.js",
   "scripts": {
-    "build": "echo \"No build step for Netlify\"",
+    "test": "npm run test:games",
+    "test:games": "node scripts/test-game-types.js",
     "start": "node alfaquestv2.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "node alfaquestv2.js",
+    "build": "echo \"No build step for Netlify\"",
     "perry": "node alfaquestv2.js",
-    "dada": "node alfaquestv2.js"
+    "dada": "node alfaquestv2.js",
+    "cf:login": "npm exec --yes wrangler -- login",
+    "cf:publish-worker": "npm exec --yes wrangler -- deploy --config wrangler.worker.toml",
+    "cf:pages-publish": "npm exec --yes wrangler -- pages deploy . --project-name=alfaquest-pages --branch \"npx.cmd wrangler pages project create alfaquest-pages --production-branch main\"",
+    "cf:pages-publish:checked": "npm run test:games && npm run cf:pages-publish",
+    "cf:deploy:checked": "npm run test:games && npm run cf:publish-worker && npm run cf:pages-publish"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.19.2",
+    "express": "^4.22.2",
     "jade": "^1.11.0",
     "node-cache": "^5.1.2",
     "node-fetch": "^3.3.2",
     "nodemon": "^2.0.12",
     "prompt-sync": "^4.2.0"
+  },
+  "devDependencies": {
+    "miniflare": "^4.20260730.0",
+    "netlify-cli": "^23.15.1",
+    "puppeteer": "^24.43.1",
+    "wrangler": "^4"
   }
 }

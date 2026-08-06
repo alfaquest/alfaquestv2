@@ -60,7 +60,7 @@ let list = ["Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Ba
     "Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Sudan","Spain",
     "Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand",
     "Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates",
-    "United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam",
+    "United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam","Wales","Xanadu",
     "Yemen","Zambia","Zimbabwe"];
 
 let countryList = list.map(function(item) {
@@ -73,7 +73,7 @@ console.log("ΑLΦΑQUΕΣΤOR - AN ALPHABET BASED WORD GAME." +
     "\n24 round game, 24 available unique starting letters." +
     "\nNo countries currently exist with starting letters 'W' & 'X'." +
     "\n'W' & 'X' and all punctuation marks are ignored in this game." +
-    "\nΑlφαqυεsτor concept, devised and written by Jude Shiels." +
+    "\nΑlφαqυεsτ concept, devised and written by Jude Shiels." +
     "\nCopyright (C) 2018 - Drakopoulos Games - All Rights Reserved");
 
 const alpha1 = "abcdefghijklmnopqrstuvyz".split('');

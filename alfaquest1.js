@@ -15,6 +15,7 @@ app.use((req, res, next) => {
 //var indexRouter = require('./routes/index');
 //app.use('/', indexRouter);
 
+<<<<<<< HEAD
 const PORT = 3000;
 if (process.env.NETLIFY) {
   console.log('Netlify build: skipping server start.');
@@ -114,6 +115,15 @@ rl.question('Enter first word: ', (word1) => {
   const alphaUsed1 = [word1.charAt(0), 'w', 'x'];
   console.log("letters used: "+alphaUsed1);
 
+=======
+// This legacy file was moved to unused_files/alfaquest1.js
+// To restore the original content, see: unused_files/alfaquest1.js
+// File intentionally replaced with a stub.
+// Legacy file moved to unused_files/alfaquest1.js
+// Original file archived; this placeholder indicates the move.
+// See: unused_files/alfaquest1.js
+module.exports = {};
+>>>>>>> 6574300f (chore(ci): pin wrangler v4 in CI, add pinned workflow, update dev deps)
   if (alphaUsed1.length === 26) {
     console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
     process.exit(0);
@@ -340,58 +350,18 @@ rl.question("Fourth word : \n", function(word4) {
     console.log("letters remaining: "+alpha6);
 
     let common5 = "";
-    for (let jkl = 0; jkl < word5.length; jkl++) {
-        for (let ijk = 0; ijk < alpha6.length; ijk++) {
-            if (word5.charAt(jkl) == alpha6[ijk]) {
-                common5 += word5.charAt(jkl);
+    for (let jkl = 0; jkl < word26.length; jkl++) {
+        for (let ijk = 0; ijk < alpha27.length; ijk++) {
+            if (word26.charAt(jkl) == alpha27[ijk]) {
+                common26 += word26.charAt(jkl) + "";
                 break;
             }
         }
     }
 
-    if(common5 === ""){
-        console.error("You have ran out of letters, GAME OVER");
-        process.exit(1);
-    }
-
-     console.log("next letter5:" + common5[0].toUpperCase());  
-
-    // SIXTH WORD SETUP
-
-
-rl.question("Sixth word : \n", function(word6) {
-    word6 = word6.toLowerCase();
-
-    if (word6.charAt(0) === common5.charAt(0) && countryList.indexOf(word6) === 1) {
-        console.log("Sixth Word equals: " + word6);
-    } else if(countryList.indexOf(word6) === -1){
-        console.error("Invalid String or Incorrect Spelling, GAME OVER");
-        process.exit(1);
-      }
-
-    let alphaUsed6 = [word1.charAt(0), word2.charAt(0), word3.charAt(0), word4.charAt(0),
-        word5.charAt(0), word6.charAt(0), 'w', 'x'
-    ];
-
-    console.log("letters used: "+alphaUsed6);
-
-    if (alphaUsed6.length == 26){
-        console.log("Bravo! You have successfully completed this game of ΑLΦΑQUΕΣΤOR!");
-    process.exit(0);
-  }
-
-    let j6 = 0;
-    let count6 = 1;
-    let alpha7 = new Array(alpha6.length - count6);
-    let remove6 = word6.charAt(0);
-
-    for (let ic = 0; ic < alpha6.length; ic++) {
-        if (alpha6[ic] != remove6)
-            alpha7[j6++] = alpha6[ic];
-    }
-
-    console.log("letters remaining: "+alpha7);
-
+// Legacy file moved to unused_files/alfaquest1.js
+// Original archived. This file is a placeholder.
+module.exports = {};
     let common6 = "";
     for (let jkl = 0; jkl < word6.length; jkl++) {
         for (let ijk = 0; ijk < alpha7.length; ijk++) {

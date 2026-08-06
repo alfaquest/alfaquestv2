@@ -1,0 +1,7 @@
+# Never upload dependencies folder
+node_modules/
+
+# Local development artifacts
+.wrangler/
+.git/
+.gitignore

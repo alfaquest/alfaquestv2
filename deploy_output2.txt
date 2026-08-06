@@ -1,0 +1,12 @@
+
+ ⛅️ wrangler 4.75.0
+───────────────────
+Uploading... (39/51)
+Uploading... (43/51)
+Uploading... (47/51)
+Uploading... (51/51)
+✨ Success! Uploaded 12 files (39 already uploaded) (1.13 sec)
+
+🌎 Deploying...
+✨ Deployment complete! Take a peek over at https://68e60d9b.alfaquest-pages.pages.dev
+✨ Deployment alias URL: https://main.alfaquest-pages.pages.dev

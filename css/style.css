@@ -137,18 +137,20 @@ p {
 
 
 input {
-    font: 32px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 22px "Lucida Grande", Helvetica, Arial, sans-serif;
     position: absolute;
     display: block;
-    border: 5px solid #95bf47;
+    border: 2px solid #1e07e6;
     border-radius: 5px;
     width: 350px;
-    border: 1px solid #1e07e6;
+    max-width: calc(100% - 20px);
     text-align: left;
+    padding: 8px;
+    box-sizing: border-box;
 }
 
 input::placeholder {
-    font: 30px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 18px "Lucida Grande", Helvetica, Arial, sans-serif;
     text-align: left;
   }
 
@@ -200,16 +202,31 @@ button {
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 800px) {
   input {
-    font: 32px "Lucida Grande", Helvetica, Arial, sans-serif;
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
     position: absolute;
     display: block;
-    border: 5px solid #95bf47;
+    border: 2px solid #95bf47;
     border-radius: 5px;
-    width: 280px;
+    width: 100%;
+    max-width: 220px;
     border: 1px solid #1e07e6;
     text-align: left;
+    padding: 8px;
+    box-sizing: border-box;
+  }
+}
+
+@media only screen and (max-width: 400px) {
+  input {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
+    max-width: 100%;
+    padding: 6px;
+  }
+  
+  input::placeholder {
+    font: 16px "Lucida Grande", Helvetica, Arial, sans-serif;
   }
 }
 
