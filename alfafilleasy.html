@@ -54,7 +54,7 @@
 </head>
 <body>
   <h1>Alfafill - Easy mode</h1>
-  <p>Add valid country names in any order to fill A-Z.</p>
+  <p>Use valid <span data-category-plural>countries</span> from <strong data-category-label>Countries of the World</strong> in any order to fill A-Z.</p>
   <div class="controls">
     <div style="flex:1">
       <em>Easy mode: no starting-letter order rule.</em>
@@ -64,8 +64,8 @@
   <hr />
   <h2>Play: Alfafill - Easy mode</h2>
   <div class="instructions" style="margin-bottom:10px;color:var(--muted)">
-    <strong>How to play:</strong> Submit country names in any order. Each valid submission that adds at least one new letter advances your progress toward covering A-Z.
-    <div><strong>Objective:</strong> Cover A-Z using the fewest countries possible.</div>
+    <strong>How to play:</strong> Submit valid <span data-category-plural>countries</span> in any order. Each submission that adds at least one new letter advances your progress toward covering A-Z.
+    <div><strong>Objective:</strong> Cover A-Z using the fewest <span data-category-plural>countries</span> possible.</div>
   </div>
   <div class="game-row">
     <input id="countryInput" placeholder="Type a country name..." />
@@ -93,11 +93,11 @@
         </div>
       </div>
       <div style="margin-top:8px"><span id="sessionInfo"></span></div>
-      <div class="footer-note">Submitted countries:</div>
+      <div class="footer-note">Submitted <span data-category-plural>countries</span>:</div>
       <ul id="submittedList"></ul>
     </div>
   </div>
-  <p style="margin:18px 0 0"><a href="index.html" style="color:#7dd3fc;text-decoration:none">&larr; Return to main menu</a></p>
+  <p style="margin:18px 0 0"><a id="categoryBackLink" href="categories.html?mode=easy" style="color:#7dd3fc;text-decoration:none">&larr; Choose another category</a></p>
   <script src="scripts/runtime-config.js"></script>
   <script src="scripts/starfield-bg.js"></script>
   <script>window.ALFA_GAME_MODE = 'easy';</script>

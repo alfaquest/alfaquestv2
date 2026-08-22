@@ -7,6 +7,7 @@ const output = join(root, 'dist');
 
 const files = [
   'index.html',
+  'categories.html',
   'alfaquest.html',
   'alfafilleasy.html',
   'alfafillnormal.html',

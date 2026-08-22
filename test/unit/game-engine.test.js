@@ -6,11 +6,19 @@ import {
   STARTING_ALPHABET,
   createGameState,
   getDerivedRequiredStart,
+  getNewUnavailableLetters,
   isComplete,
   replayGame,
+  scoreUnavailableLetterBonus,
   scoreWord,
-  submitCountry
+  submitCountry,
+  submitEntry
 } from '../../shared/game-engine.js';
+import {
+  categoriesForMode,
+  requireCategory,
+  resolveCategory
+} from '../../shared/categories.js';
 import {
   displayCountry,
   isCountry,
@@ -21,6 +29,27 @@ test('normalizes supported aliases to canonical countries', () => {
   assert.equal(normalizeCountry(' USA '), 'united states');
   assert.equal(displayCountry('usa'), 'United States');
   assert.equal(isCountry('Antigua & Barbuda'), true);
+});
+
+test('resolves curated categories and exposes mode-compatible metadata', () => {
+  const category = resolveCategory('countries');
+  assert.equal(category.label, 'Countries of the World');
+  assert.equal(category.singular, 'country');
+  assert.equal(category.startingLetters.includes('w'), false);
+  assert.deepEqual(category.unavailableLetters, ['w', 'x']);
+  assert.deepEqual(categoriesForMode('classic').map((item) => item.id), ['countries']);
+  assert.throws(
+    () => requireCategory('unknown'),
+    (error) => error.code === 'INVALID_CATEGORY'
+  );
+});
+
+test('stores category identity and validates generic entries', () => {
+  const state = createGameState('classic', 'countries');
+  assert.equal(state.category, 'countries');
+  const next = submitEntry(state, 'Albania');
+  assert.deepEqual(next.submitted, ['albania']);
+  assert.equal(next.required, 'l');
 });
 
 test('derives the next required starting letter deterministically', () => {
@@ -63,6 +92,22 @@ test('uses the shared scoring table', () => {
   assert.equal(scoreWord('Albania', 1), 300);
   assert.equal(scoreWord('Qatar', 2), 1200);
   assert.equal(scoreWord('', -1), 0);
+});
+
+test('awards category-derived unavailable-letter bonuses only once', () => {
+  assert.deepEqual(getNewUnavailableLetters('Mexico'), ['x']);
+  assert.equal(scoreUnavailableLetterBonus('Mexico'), 500);
+  assert.equal(scoreUnavailableLetterBonus('Mexico', ['x']), 0);
+  assert.equal(scoreUnavailableLetterBonus('New Zealand'), 400);
+
+  const state = replayGame(
+    'classic',
+    ['Albania', 'Latvia', 'Tonga', 'Oman', 'Mexico']
+  );
+  assert.deepEqual(state.lastUnavailableLetters, ['x']);
+  assert.equal(state.lastUnavailableBonus, 500);
+  assert.equal(state.usedLetters.includes('x'), true);
+  assert.equal(state.collectedUnavailableLetters.includes('x'), true);
 });
 
 test('uses mode-specific completion rules', () => {

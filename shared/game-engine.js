@@ -1,13 +1,13 @@
 import {
-  COUNTRY_SET,
-  normalizeCountry
-} from './countries.js';
+  DEFAULT_CATEGORY_ID,
+  isCategoryCompatible,
+  requireCategory,
+  resolveCategory
+} from './categories.js';
 
 export const ALPHABET = Object.freeze('abcdefghijklmnopqrstuvwxyz'.split(''));
-export const IGNORED_STARTS = Object.freeze(['w', 'x']);
-export const STARTING_ALPHABET = Object.freeze(
-  ALPHABET.filter((letter) => !IGNORED_STARTS.includes(letter))
-);
+export const IGNORED_STARTS = resolveCategory(DEFAULT_CATEGORY_ID).ignoredStarts;
+export const STARTING_ALPHABET = resolveCategory(DEFAULT_CATEGORY_ID).startingLetters;
 
 export const GAME_MODES = Object.freeze({
   classic: Object.freeze({
@@ -68,19 +68,44 @@ export function extractLetters(value) {
   return [...letters];
 }
 
-export function getDerivedRequiredStart(submitted = []) {
-  if (submitted.length === 0) return 'a';
+export function getNewUnavailableLetters(
+  value,
+  usedLetters = [],
+  category = DEFAULT_CATEGORY_ID
+) {
+  const activeCategory = resolveCategory(category);
+  const used = new Set(usedLetters);
+  const unavailable = new Set(activeCategory.unavailableLetters);
+  return extractLetters(activeCategory.normalize(value)).filter(
+    (letter) => unavailable.has(letter) && !used.has(letter)
+  );
+}
 
-  const available = new Set(STARTING_ALPHABET);
-  let required = 'a';
+export function scoreUnavailableLetterBonus(
+  value,
+  usedLetters = [],
+  category = DEFAULT_CATEGORY_ID
+) {
+  return getNewUnavailableLetters(value, usedLetters, category).reduce(
+    (total, letter) => total + (LETTER_SCORES[letter] ?? 0),
+    0
+  );
+}
+
+export function getDerivedRequiredStart(submitted = [], category = DEFAULT_CATEGORY_ID) {
+  const activeCategory = resolveCategory(category);
+  if (submitted.length === 0) return activeCategory.startingLetters[0] ?? null;
+
+  const available = new Set(activeCategory.startingLetters);
+  let required = activeCategory.startingLetters[0] ?? null;
 
   for (let index = 0; index < submitted.length; index += 1) {
-    const word = normalizeCountry(submitted[index]);
+    const word = activeCategory.normalize(submitted[index]);
     const start = word.charAt(0);
 
-    if (!word) throw gameError('INVALID_COUNTRY', `Invalid country at move ${index + 1}.`);
+    if (!word) throw gameError('INVALID_ENTRY', `Invalid ${activeCategory.singular} at move ${index + 1}.`);
     if (start !== required) {
-      throw gameError('WRONG_START', `Country must begin with ${required.toUpperCase()}.`);
+      throw gameError('WRONG_START', `${capitalize(activeCategory.singular)} must begin with ${required.toUpperCase()}.`);
     }
     if (!available.has(start)) {
       throw gameError('START_REUSED', `Starting letter ${start.toUpperCase()} has already been used.`);
@@ -90,70 +115,90 @@ export function getDerivedRequiredStart(submitted = []) {
     required = [...word].find((letter) => available.has(letter)) ?? null;
 
     if (!required && available.size > 0) {
-      throw gameError('DEAD_END', 'No unused starting letter remains in that country.');
+      throw gameError('DEAD_END', `No unused starting letter remains in that ${activeCategory.singular}.`);
     }
   }
 
   return required;
 }
 
-export function getAlphabeticalRequiredStart(usedLetters = []) {
+export function getAlphabeticalRequiredStart(usedLetters = [], category = DEFAULT_CATEGORY_ID) {
+  const activeCategory = resolveCategory(category);
   const used = new Set(usedLetters);
-  return STARTING_ALPHABET.find((letter) => !used.has(letter)) ?? null;
+  return activeCategory.startingLetters.find((letter) => !used.has(letter)) ?? null;
 }
 
-export function getSequentialCollectedLetters(word, usedLetters = []) {
+export function getSequentialCollectedLetters(word, usedLetters = [], category = DEFAULT_CATEGORY_ID) {
+  const activeCategory = resolveCategory(category);
   const used = new Set(usedLetters);
-  const required = getAlphabeticalRequiredStart(used);
-  const normalized = normalizeCountry(word);
+  const required = getAlphabeticalRequiredStart(used, activeCategory);
+  const normalized = activeCategory.normalize(word);
   if (!required || normalized.charAt(0) !== required) return [];
 
   const lettersInWord = new Set(extractLetters(normalized));
   const collected = [];
-  const startIndex = STARTING_ALPHABET.indexOf(required);
+  const startIndex = activeCategory.startingLetters.indexOf(required);
 
-  for (let index = startIndex; index < STARTING_ALPHABET.length; index += 1) {
-    const letter = STARTING_ALPHABET[index];
+  for (let index = startIndex; index < activeCategory.startingLetters.length; index += 1) {
+    const letter = activeCategory.startingLetters[index];
     if (used.has(letter)) continue;
     if (!lettersInWord.has(letter)) break;
     collected.push(letter);
     used.add(letter);
   }
 
-  for (const letter of IGNORED_STARTS) {
+  for (const letter of activeCategory.ignoredStarts) {
     if (lettersInWord.has(letter) && !used.has(letter)) collected.push(letter);
   }
 
   return collected;
 }
 
-export function createGameState(mode = 'fill') {
+export function createGameState(mode = 'fill', category = DEFAULT_CATEGORY_ID) {
+  const activeMode = resolveMode(mode);
+  const activeCategory = requireCategory(category);
+  if (!isCategoryCompatible(activeCategory, activeMode.id)) {
+    throw gameError(
+      'CATEGORY_MODE_UNSUPPORTED',
+      `${activeCategory.label} does not support ${activeMode.id} mode.`
+    );
+  }
   return {
-    mode: resolveMode(mode).id,
+    mode: activeMode.id,
+    category: activeCategory.id,
     submitted: [],
     usedLetters: [],
-    usedStarts: [...IGNORED_STARTS],
-    required: resolveMode(mode).sequencing === 'none' ? null : 'a',
+    usedStarts: [...activeCategory.ignoredStarts],
+    unavailableLetters: [...activeCategory.unavailableLetters],
+    collectedUnavailableLetters: [],
+    lastUnavailableLetters: [],
+    lastUnavailableBonus: 0,
+    required: activeMode.sequencing === 'none'
+      ? null
+      : (activeCategory.startingLetters[0] ?? null),
     complete: false
   };
 }
 
-export function submitCountry(state, value) {
+export function submitEntry(state, value) {
   const current = sanitizeState(state);
   const mode = resolveMode(current.mode);
-  const country = normalizeCountry(value);
+  const category = requireCategory(current.category);
+  const entry = category.normalize(value);
 
-  if (!COUNTRY_SET.has(country)) {
-    throw gameError('INVALID_COUNTRY', 'Enter a country from the supported country list.');
+  if (!category.entrySet.has(entry)) {
+    const code = category.id === 'countries' ? 'INVALID_COUNTRY' : 'INVALID_ENTRY';
+    throw gameError(code, `Enter ${articleFor(category.singular)} ${category.singular} from the supported ${category.shortLabel.toLowerCase()} list.`);
   }
-  if (current.submitted.includes(country)) {
-    throw gameError('COUNTRY_REUSED', 'That country has already been submitted.');
+  if (current.submitted.includes(entry)) {
+    const code = category.id === 'countries' ? 'COUNTRY_REUSED' : 'ENTRY_REUSED';
+    throw gameError(code, `That ${category.singular} has already been submitted.`);
   }
 
-  const start = country.charAt(0);
+  const start = entry.charAt(0);
   const required = requiredStart(current);
   if (required && start !== required) {
-    throw gameError('WRONG_START', `Country must begin with ${required.toUpperCase()}.`);
+    throw gameError('WRONG_START', `${capitalize(category.singular)} must begin with ${required.toUpperCase()}.`);
   }
   if (mode.sequencing === 'derived' && current.usedStarts.includes(start)) {
     throw gameError('START_REUSED', `Starting letter ${start.toUpperCase()} has already been used.`);
@@ -161,9 +206,9 @@ export function submitCountry(state, value) {
 
   let newlyCollected;
   if (mode.id === 'sequence') {
-    newlyCollected = getSequentialCollectedLetters(country, current.usedLetters);
+    newlyCollected = getSequentialCollectedLetters(entry, current.usedLetters, category);
   } else {
-    newlyCollected = extractLetters(country).filter(
+    newlyCollected = extractLetters(entry).filter(
       (letter) => !current.usedLetters.includes(letter)
     );
   }
@@ -172,11 +217,23 @@ export function submitCountry(state, value) {
     throw gameError('NO_NEW_LETTER', 'That country does not add a new required letter.');
   }
 
+  const newUnavailableLetters = newlyCollected.filter(
+    (letter) => category.unavailableLetters.includes(letter)
+  );
+  const unavailableBonus = newUnavailableLetters.reduce(
+    (total, letter) => total + (LETTER_SCORES[letter] ?? 0),
+    0
+  );
   const next = {
     ...current,
-    submitted: [...current.submitted, country],
+    submitted: [...current.submitted, entry],
     usedLetters: [...new Set([...current.usedLetters, ...newlyCollected])].sort(),
-    usedStarts: [...new Set([...current.usedStarts, start])].sort()
+    usedStarts: [...new Set([...current.usedStarts, start])].sort(),
+    collectedUnavailableLetters: [
+      ...new Set([...current.collectedUnavailableLetters, ...newUnavailableLetters])
+    ].sort(),
+    lastUnavailableLetters: newUnavailableLetters,
+    lastUnavailableBonus: unavailableBonus
   };
   next.required = requiredStart(next);
   next.complete = isComplete(next);
@@ -186,61 +243,83 @@ export function submitCountry(state, value) {
     !next.complete &&
     next.required === null
   ) {
-    throw gameError('DEAD_END', 'No unused starting letter remains in that country.');
+    throw gameError('DEAD_END', `No unused starting letter remains in that ${category.singular}.`);
   }
 
   return next;
 }
 
+export function submitCountry(state, value) {
+  return submitEntry({ ...state, category: state?.category ?? DEFAULT_CATEGORY_ID }, value);
+}
+
 export function requiredStart(state) {
   const current = sanitizeState(state);
   const mode = resolveMode(current.mode);
+  const category = resolveCategory(current.category);
   if (mode.sequencing === 'none') return null;
   if (mode.sequencing === 'alphabetical') {
-    return getAlphabeticalRequiredStart(current.usedLetters);
+    return getAlphabeticalRequiredStart(current.usedLetters, category);
   }
-  return getDerivedRequiredStart(current.submitted);
+  return getDerivedRequiredStart(current.submitted, category);
 }
 
 export function isComplete(state) {
   const current = sanitizeState(state);
   const mode = resolveMode(current.mode);
+  const category = resolveCategory(current.category);
   if (mode.completion === 'starting-letters') {
-    return STARTING_ALPHABET.every((letter) => current.usedStarts.includes(letter));
+    return category.startingLetters.every((letter) => current.usedStarts.includes(letter));
   }
-  if (mode.completion === 'sequence') {
-    return ALPHABET.every((letter) => current.usedLetters.includes(letter));
-  }
-  return ALPHABET.every((letter) => current.usedLetters.includes(letter));
+  return category.collectibleLetters.every((letter) => current.usedLetters.includes(letter));
 }
 
-export function scoreWord(word, moveNumber, multiplier = 2) {
-  const start = normalizeCountry(word).charAt(0);
+export function scoreWord(word, moveNumber, multiplier = 2, category = DEFAULT_CATEGORY_ID) {
+  const start = resolveCategory(category).normalize(word).charAt(0);
   const firstLetterScore = (LETTER_SCORES[start] ?? 0) * multiplier;
   const positionBonus = Math.max(0, Number(moveNumber) || 0) * 100;
   return firstLetterScore + positionBonus;
 }
 
-export function replayGame(mode, submitted = []) {
+export function replayGame(mode, submitted = [], category = DEFAULT_CATEGORY_ID) {
   return submitted.reduce(
-    (state, country) => submitCountry(state, country),
-    createGameState(mode)
+    (state, entry) => submitEntry(state, entry),
+    createGameState(mode, category)
   );
 }
 
 function sanitizeState(state = {}) {
+  const category = resolveCategory(state.category);
   return {
     mode: resolveMode(state.mode).id,
+    category: category.id,
     submitted: Array.isArray(state.submitted)
-      ? state.submitted.map(normalizeCountry)
+      ? state.submitted.map(category.normalize)
       : [],
     usedLetters: Array.isArray(state.usedLetters) ? [...state.usedLetters] : [],
     usedStarts: Array.isArray(state.usedStarts)
       ? [...state.usedStarts]
-      : [...IGNORED_STARTS],
+      : [...category.ignoredStarts],
+    unavailableLetters: [...category.unavailableLetters],
+    collectedUnavailableLetters: Array.isArray(state.collectedUnavailableLetters)
+      ? [...state.collectedUnavailableLetters]
+      : [],
+    lastUnavailableLetters: Array.isArray(state.lastUnavailableLetters)
+      ? [...state.lastUnavailableLetters]
+      : [],
+    lastUnavailableBonus: Math.max(0, Number(state.lastUnavailableBonus) || 0),
     required: state.required ?? null,
     complete: Boolean(state.complete)
   };
+}
+
+function capitalize(value) {
+  const text = String(value ?? '');
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
+}
+
+function articleFor(value) {
+  return /^[aeiou]/i.test(String(value ?? '')) ? 'an' : 'a';
 }
 
 function gameError(code, message) {

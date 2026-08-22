@@ -59,15 +59,15 @@
 </head>
 <body>
   <h1>Alfafill - Normal mode</h1>
-  <p>Find a sequence of country names whose combined letters cover A–Z using Alfaquest rules.</p>
+  <p>Find a sequence of <span data-category-plural>countries</span> from <strong data-category-label>Countries of the World</strong> whose combined letters cover A–Z.</p>
   <div class="controls">
     <div style="margin-left:auto"><span id="status"></span></div>
   </div>
   <hr />
   <h2>Play: Alfafill - Normal mode</h2>
   <div class="instructions" style="margin-bottom:10px;color:var(--muted)">
-    <strong>How to play:</strong> Start with A. Each next country must begin with the required letter shown on the grid (Alfaquest-style progression, so Albania leads to required L). W and X are skipped because no countries begin with those letters. Every valid submission collects all letters in that country.
-    <div><strong>Objective:</strong> Complete the alphabet with valid countries while minimizing your move count.</div>
+    <strong>How to play:</strong> Start with the first available letter. Each next <span data-category-singular>country</span> must begin with the required letter shown on the grid. Every valid submission collects all letters in that entry.
+    <div><strong>Objective:</strong> Complete the alphabet with valid <span data-category-plural>countries</span> while minimizing your move count.</div>
   </div>
   <div class="game-row">
     <input id="countryInput" placeholder="Type a country name..." />
@@ -95,11 +95,11 @@
         </div>
       </div>
       <div style="margin-top:8px"><span id="sessionInfo"></span></div>
-      <div class="footer-note">Submitted countries:</div>
+      <div class="footer-note">Submitted <span data-category-plural>countries</span>:</div>
       <ul id="submittedList"></ul>
     </div>
   </div>
-  <p style="margin:18px 0 0"><a href="index.html" style="color:#7dd3fc;text-decoration:none">&larr; Return to main menu</a></p>
+  <p style="margin:18px 0 0"><a id="categoryBackLink" href="categories.html?mode=fill" style="color:#7dd3fc;text-decoration:none">&larr; Choose another category</a></p>
   <script src="scripts/runtime-config.js"></script>
   <script src="scripts/starfield-bg.js"></script>
   <script>window.ALFA_GAME_MODE = 'fill';</script>

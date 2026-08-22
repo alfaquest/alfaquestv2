@@ -31,10 +31,10 @@ function findChrome() {
 }
 
 const GAME_PAGES = [
-  { file: 'alfaquest.html', name: 'Alfaquest', hasRequiredFlow: true },
-  { file: 'alfafillnormal.html', name: 'Alfafill Normal', hasRequiredFlow: true },
-  { file: 'alfafilleasy.html', name: 'Alfafill Easy', hasRequiredFlow: false },
-  { file: 'alfafillhard.html', name: 'Alfafill Hard', hasRequiredFlow: true }
+  { mode: 'classic', file: 'alfaquest.html', name: 'Alfaquest', hasRequiredFlow: true },
+  { mode: 'fill', file: 'alfafillnormal.html', name: 'Alfafill Normal', hasRequiredFlow: true },
+  { mode: 'easy', file: 'alfafilleasy.html', name: 'Alfafill Easy', hasRequiredFlow: false },
+  { mode: 'strict', file: 'alfafillhard.html', name: 'Alfafill Hard', hasRequiredFlow: true }
 ];
 
 function delay(ms) {
@@ -60,7 +60,7 @@ async function waitForServer(url, timeoutMs) {
 }
 
 async function runPageChecks(page, game) {
-  const url = `${BASE_URL}/${game.file}`;
+  const url = `${BASE_URL}/${game.file}?category=countries`;
   const pageErrors = [];
   const onPageError = (error) => pageErrors.push(error.message);
   page.on('pageerror', onPageError);
@@ -72,6 +72,7 @@ async function runPageChecks(page, game) {
 
   const objectiveText = await page.$eval('.instructions', (el) => el.textContent || '');
   assert(objectiveText.includes('Objective:'), `${game.name}: missing Objective line`);
+  assert(objectiveText.toLowerCase().includes('countries'), `${game.name}: category copy was not populated`);
 
   await page.waitForSelector('#submittedLegend');
 
@@ -110,6 +111,27 @@ async function runPageChecks(page, game) {
   if (game.hasRequiredFlow) {
     assert(state.hasRequiredBadge, `${game.name}: required-letter badge missing after submission`);
   }
+  if (game.mode === 'classic') {
+    for (const entry of ['Latvia', 'Tonga', 'Oman', 'Mexico']) {
+      await page.type('#countryInput', entry);
+      await page.click('#submitCountry');
+      await delay(120);
+    }
+    const unavailableBonusState = await page.evaluate(() => {
+      const xCell = [...document.querySelectorAll('.letter-cell')]
+        .find((element) => element.textContent === 'X');
+      const lastSubmission = [...document.querySelectorAll('#submittedList li')].at(-1);
+      return {
+        xCollected: xCell?.classList.contains('unavailable-collected') || false,
+        scoreText: lastSubmission?.textContent || ''
+      };
+    });
+    assert(unavailableBonusState.xCollected, `${game.name}: unavailable X was not marked collected`);
+    assert(
+      unavailableBonusState.scoreText.includes('500 unavailable X'),
+      `${game.name}: unavailable-letter bonus was not shown`
+    );
+  }
   assert(pageErrors.length === 0, `${game.name}: browser error: ${pageErrors.join('; ')}`);
   page.off('pageerror', onPageError);
 }
@@ -120,9 +142,41 @@ async function runMenuChecks(page) {
     elements.map((element) => element.getAttribute('href'))
   );
   assert(
-    JSON.stringify(links) === JSON.stringify(GAME_PAGES.map((game) => game.file)),
+    JSON.stringify(links) === JSON.stringify(GAME_PAGES.map((game) => `categories.html?mode=${game.mode}`)),
     `Menu links do not match supported games: ${links.join(', ')}`
   );
+}
+
+async function runCategoryChecks(page) {
+  for (const game of GAME_PAGES) {
+    await page.goto(`${BASE_URL}/categories.html?mode=${game.mode}`, { waitUntil: 'networkidle2' });
+    const categoryLink = await page.$eval('a.button', (element) => element.getAttribute('href'));
+    assert(
+      categoryLink === `${game.file}?category=countries`,
+      `${game.name}: category selection points to ${categoryLink}`
+    );
+  }
+}
+
+async function runCulDeSacCheck(page) {
+  await page.goto(
+    `${BASE_URL}/alfaquest.html?category=countries`,
+    { waitUntil: 'networkidle2' }
+  );
+  for (const entry of ['Albania', 'Latvia', 'Tonga', 'Oman', 'Malta']) {
+    await page.type('#countryInput', entry);
+    await page.click('#submitCountry');
+    await delay(120);
+  }
+  const state = await page.evaluate(() => ({
+    status: document.getElementById('status')?.textContent || '',
+    toast: document.getElementById('alfa-toast')?.textContent || '',
+    inputDisabled: document.getElementById('countryInput')?.disabled || false,
+    submitDisabled: document.getElementById('submitCountry')?.disabled || false
+  }));
+  assert(state.status.includes('Game over'), 'Cul-de-sac: status did not announce game over');
+  assert(state.toast.includes('Game over'), 'Cul-de-sac: toast did not announce game over');
+  assert(state.inputDisabled && state.submitDisabled, 'Cul-de-sac: controls remain enabled');
 }
 
 async function main() {
@@ -172,11 +226,15 @@ async function main() {
 
     await runMenuChecks(page);
     process.stdout.write('PASS: Game menu\n');
+    await runCategoryChecks(page);
+    process.stdout.write('PASS: Category selection\n');
 
     for (const game of GAME_PAGES) {
       await runPageChecks(page, game);
       process.stdout.write(`PASS: ${game.name}\n`);
     }
+    await runCulDeSacCheck(page);
+    process.stdout.write('PASS: Cul-de-sac game over\n');
 
     process.stdout.write('All game type checks passed.\n');
   } finally {

@@ -2,31 +2,37 @@
 // Shared vanilla controller for all alfaword.games modes.
 
 import {
-  COUNTRY_DISPLAY,
-  COUNTRY_NAMES,
-  normalizeCountry
-} from './shared/countries.js';
+  DEFAULT_CATEGORY_ID,
+  isCategoryCompatible,
+  requireCategory
+} from './shared/categories.js';
 import {
   ALPHABET,
-  IGNORED_STARTS,
-  LETTER_SCORES,
-  STARTING_ALPHABET,
   extractLetters,
   getAlphabeticalRequiredStart,
   getDerivedRequiredStart,
+  getNewUnavailableLetters,
   getSequentialCollectedLetters as getEngineSequentialCollectedLetters,
   resolveMode,
+  scoreUnavailableLetterBonus,
   scoreWord as scoreWordBase
 } from './shared/game-engine.js';
 
-const COUNTRY_LIST = COUNTRY_NAMES.map((name) => name.toLowerCase());
+const categoryParams = new URLSearchParams(window.location.search);
+const requestedCategoryId = categoryParams.get('category') || window.ALFA_CATEGORY || DEFAULT_CATEGORY_ID;
+const ACTIVE_CATEGORY = requireCategory(requestedCategoryId);
 const ALPH = ALPHABET;
-const GAME_ALPH = STARTING_ALPHABET;
-const IGNORED = IGNORED_STARTS;
 const ACTIVE_MODE = resolveMode(window.ALFA_GAME_MODE).id;
+if (!isCategoryCompatible(ACTIVE_CATEGORY, ACTIVE_MODE)) {
+  throw new Error(`${ACTIVE_CATEGORY.label} does not support ${ACTIVE_MODE} mode.`);
+}
+const ENTRY_LIST = ACTIVE_CATEGORY.entries.map((entry) => ACTIVE_CATEGORY.normalize(entry));
+const GAME_ALPH = ACTIVE_CATEGORY.startingLetters;
+const COLLECTIBLE_ALPH = ACTIVE_CATEGORY.collectibleLetters;
+const IGNORED = ACTIVE_CATEGORY.ignoredStarts;
 
-window._alfa_country_display = COUNTRY_DISPLAY;
-window._alfa_country_list = COUNTRY_LIST;
+window._alfa_entry_display = ACTIVE_CATEGORY.displayMap;
+window._alfa_entry_list = ENTRY_LIST;
 
 function isAlfaMode(){
   return ACTIVE_MODE === 'classic';
@@ -48,14 +54,15 @@ function isNormalAlfafillMode(){
   return ACTIVE_MODE === 'fill';
 }
 
-function normalize(s){ return normalizeCountry(s); }
+function normalize(s){ return ACTIVE_CATEGORY.normalize(s); }
 
 // Runtime config supplies the Worker host and may be overridden before this module loads.
 const API_BASE = (typeof window !== 'undefined' && typeof window.ALFA_API_BASE === 'string')
   ? window.ALFA_API_BASE.replace(/\/+$/, '')
   : '';
-const ALFA_HIGH_SCORE_KEY = 'alfaquest_high_score_v3';
-const ALFA_SCORING_VERSION = 'v3_million_scale';
+const STORAGE_NAMESPACE = `alfa_${ACTIVE_MODE}_${ACTIVE_CATEGORY.id}`;
+const ALFA_HIGH_SCORE_KEY = `alfaquest_high_score_v4_${ACTIVE_CATEGORY.id}`;
+const ALFA_SCORING_VERSION = 'v4_unavailable_letter_bonus';
 const ALFA_TIME_TARGET_PER_MOVE_SECONDS = 12;
 const ALFA_TIME_TARGET_MIN_SECONDS = 120;
 const ALFA_TIME_FACTOR_MIN = 0.90;
@@ -85,6 +92,8 @@ let completionShown = false;
 let completionResetTimer = null;
 let gameOverResetTimer = null;
 let submissionScores = [];
+let unavailableBonuses = [];
+let unavailableBonusLetters = [];
 let scoreDisplayEnabled = false;
 let highScoreRecord = null;
 let runStartedAtMs = null;
@@ -99,7 +108,14 @@ function isAlfaScoringMode(){
 }
 
 function scoreWord(word, moveNumber){
-  return scoreWordBase(word, moveNumber, ALFA_LETTER_SCORE_MULTIPLIER);
+  return scoreWordBase(word, moveNumber, ALFA_LETTER_SCORE_MULTIPLIER, ACTIVE_CATEGORY);
+}
+
+function getUnavailableBonus(word){
+  return {
+    letters: getNewUnavailableLetters(word, usedLetters, ACTIVE_CATEGORY),
+    score: scoreUnavailableLetterBonus(word, usedLetters, ACTIVE_CATEGORY)
+  };
 }
 
 function getTotalScore(){
@@ -161,6 +177,38 @@ function escapeHtml(s){
     .replace(/'/g, '&#39;');
 }
 
+function capitalize(value){
+  const text = String(value || '');
+  return text ? text.charAt(0).toUpperCase() + text.slice(1) : text;
+}
+
+function applyCategoryCopy(){
+  document.querySelectorAll('[data-category-label]').forEach((element) => {
+    element.textContent = ACTIVE_CATEGORY.label;
+  });
+  document.querySelectorAll('[data-category-singular]').forEach((element) => {
+    element.textContent = ACTIVE_CATEGORY.singular;
+  });
+  document.querySelectorAll('[data-category-plural]').forEach((element) => {
+    element.textContent = ACTIVE_CATEGORY.plural;
+  });
+  document.querySelectorAll('[data-category-start-count]').forEach((element) => {
+    element.textContent = String(GAME_ALPH.length);
+  });
+  document.querySelectorAll('[data-category-ignored]').forEach((element) => {
+    element.textContent = IGNORED.length
+      ? IGNORED.map((letter) => letter.toUpperCase()).join(' and ')
+      : 'none';
+  });
+  const input = document.getElementById('countryInput');
+  if (input) {
+    input.placeholder = ACTIVE_CATEGORY.placeholder;
+    input.setAttribute('aria-label', capitalize(ACTIVE_CATEGORY.singular));
+  }
+  const backLink = document.getElementById('categoryBackLink');
+  if (backLink) backLink.href = `categories.html?mode=${encodeURIComponent(ACTIVE_MODE)}`;
+}
+
 function ensureSessionInfoBadgeStyles(){
   if (typeof document === 'undefined') return;
   if (document.getElementById('session-info-badge-styles')) return;
@@ -214,11 +262,15 @@ function ensureSubmittedLegend(){
   legend.style.background = 'rgba(15, 23, 39, 0.5)';
   legend.style.fontSize = '0.82rem';
   legend.style.lineHeight = '1.5';
+  const ignoredLabel = IGNORED.length
+    ? '<div style="color:#d1d9e2"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;margin-right:6px;vertical-align:middle"></span>Red: unavailable starting letter (' + IGNORED.map((letter) => letter.toUpperCase()).join(' or ') + ')</div>' +
+      '<div style="color:#d1d9e2"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e;border:2px solid #7dd3fc;margin-right:6px;vertical-align:middle"></span>Green with blue ring: unavailable letter collected indirectly</div>'
+    : '';
   legend.innerHTML =
     '<div style="color:#cbe7ff;font-weight:800;margin-bottom:4px">Letter colour legend</div>' +
     '<div style="color:#d1d9e2"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#22c55e;margin-right:6px;vertical-align:middle"></span>Green: letter already used before that submission</div>' +
     '<div style="color:#d1d9e2"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#fbbf24;margin-right:6px;vertical-align:middle"></span>Gold: current required letter highlight</div>' +
-    '<div style="color:#d1d9e2"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#ef4444;margin-right:6px;vertical-align:middle"></span>Red: ignored letter (W or X)</div>';
+    ignoredLabel;
 
   listEl.parentNode.insertBefore(legend, listEl);
 }
@@ -463,6 +515,13 @@ function showToast(message, variant, durationMs, onClick){
   toast.style.boxShadow = palette.shadow;
   toast.style.opacity = '0';
   toast.style.transition = 'opacity 220ms ease, transform 220ms ease';
+  if (String(message).includes('\n')) {
+    toast.style.width = 'min(560px, calc(100vw - 32px))';
+    toast.style.borderRadius = '16px';
+    toast.style.textAlign = 'center';
+    toast.style.whiteSpace = 'pre-line';
+    toast.style.lineHeight = '1.45';
+  }
   if (typeof onClick === 'function'){
     toast.style.cursor = 'pointer';
     toast.title = 'Tap to continue';
@@ -500,8 +559,14 @@ function showInfoToast(message, durationMs){
 }
 
 function showResetRequiredToast(message, variant){
-  const suffix = String(message).endsWith('.') ? ' Tap here to reset' : '. Tap here to reset';
-  showToast(message + suffix, variant || 'error', 0, () => {
+  const selectedVariant = variant || 'error';
+  const title = selectedVariant === 'success' ? 'Game complete' : 'Game over';
+  const detail = String(message)
+    .replace(/^game over\s*[—:-]?\s*/i, '')
+    .replace(/\s*Tap here to reset\.?$/i, '')
+    .trim();
+  const formatted = title + (detail ? '\n' + detail : '') + '\nTap to reset';
+  showToast(formatted, selectedVariant, 0, () => {
     resetLocal();
   });
 }
@@ -545,25 +610,26 @@ function getAlfaScoreRating(finalScore){
 }
 
 function getCompletionToastMessage(){
+  const plural = ACTIVE_CATEGORY.plural;
   if (isAlfaMode()){
     const breakdown = getScoreBreakdown();
     const rating = getAlfaScoreRating(breakdown.finalScore);
-    return 'Bravo! All 24 required starting letters completed. Score: ' + breakdown.finalScore + '. Rating: ' + rating + '.';
+    return 'Bravo! All ' + GAME_ALPH.length + ' required starting letters completed. Score: ' + breakdown.finalScore + '. Rating: ' + rating + '.';
   }
   if (isEasyAlfafillMode()){
     const moveCount = submitted.length;
     const rating = getEasyModeRating(moveCount);
-    return 'Bravo! All target letters completed in ' + moveCount + ' countries. Rating: ' + rating + '.';
+    return 'Bravo! All target letters completed in ' + moveCount + ' ' + plural + '. Rating: ' + rating + '.';
   }
   if (isNormalAlfafillMode()){
     const moveCount = submitted.length;
     const rating = getNormalModeRating(moveCount);
-    return 'Bravo! All target letters completed in ' + moveCount + ' countries. Rating: ' + rating + '.';
+    return 'Bravo! All target letters completed in ' + moveCount + ' ' + plural + '. Rating: ' + rating + '.';
   }
   if (isSequentialFullCollectMode()){
     const moveCount = submitted.length;
     const rating = getHardModeRating(moveCount);
-    return 'Bravo! All target letters completed in ' + moveCount + ' countries. Rating: ' + rating + '.';
+    return 'Bravo! All target letters completed in ' + moveCount + ' ' + plural + '. Rating: ' + rating + '.';
   }
   return 'Bravo! All target letters completed.';
 }
@@ -580,8 +646,8 @@ function updateUI(){
   const isNormal = isNormalAlfafillMode();
   const isSeq = isSequentialAlfafillMode();
   const isSeqFull = isSequentialFullCollectMode();
-  const remainingLetters = ALPH.filter(c => !usedLetters.has(c));
-  const remainingSeqLetters = ALPH.filter(c => !usedLetters.has(c));
+  const remainingLetters = COLLECTIBLE_ALPH.filter(c => !usedLetters.has(c));
+  const remainingSeqLetters = COLLECTIBLE_ALPH.filter(c => !usedLetters.has(c));
   const remainingLettersSet = new Set(remainingLetters);
   let remainingCount;
   if (isAlfa){
@@ -615,10 +681,10 @@ function updateUI(){
     if (isEasyFill) scoreRatingEl.textContent = getEasyModeRating(moveCount);
     else if (isNormal) scoreRatingEl.textContent = getNormalModeRating(moveCount);
     else scoreRatingEl.textContent = getHardModeRating(moveCount);
-    scoreMovesEl.textContent = moveCount + (moveCount === 1 ? ' country used' : ' countries used');
+    scoreMovesEl.textContent = moveCount + ' ' + (moveCount === 1 ? ACTIVE_CATEGORY.singular : ACTIVE_CATEGORY.plural) + ' used';
   }
   const ul = document.getElementById('submittedList'); ul.innerHTML = '';
-  // Render submitted countries and highlight letters that were already used before each submission
+  // Render submitted entries and highlight letters that were already used before each submission.
   const runningSeen = new Set();
   const usedStartingLetters = new Set();
   submitted.forEach((c,i)=>{
@@ -642,8 +708,12 @@ function updateUI(){
     if (isAlfa && scoreDisplayEnabled) {
       const total = submissionScores[i] || 0;
       const positionBonus = (i + 1) * 100;
-      const firstLetterScore = total - positionBonus;
-      scoreSuffix = ' <span class="score-meta">(+' + total + ': ' + firstLetterScore + ' starting letter + ' + positionBonus + ' position bonus)</span>';
+      const unavailableBonus = unavailableBonuses[i] || 0;
+      const firstLetterScore = total - positionBonus - unavailableBonus;
+      const unavailableLabel = unavailableBonus
+        ? ' + ' + unavailableBonus + ' unavailable ' + (unavailableBonusLetters[i] || []).map((letter) => letter.toUpperCase()).join(', ')
+        : '';
+      scoreSuffix = ' <span class="score-meta">(+' + total + ': ' + firstLetterScore + ' starting letter + ' + positionBonus + ' position bonus' + unavailableLabel + ')</span>';
     }
     li.innerHTML = (i+1)+'. '+formatDisplayWithHighlights(c, alreadyUsed, c.charAt(0), activeLetter) + scoreSuffix;
     ul.appendChild(li);
@@ -651,7 +721,7 @@ function updateUI(){
   renderLetterGrid();
   const pct = isAlfa
     ? Math.round(((GAME_ALPH.length - remainingCount) / GAME_ALPH.length) * 100)
-    : Math.round(((26 - remainingCount) / 26) * 100);
+    : Math.round(((COLLECTIBLE_ALPH.length - remainingCount) / COLLECTIBLE_ALPH.length) * 100);
   const bar = document.getElementById('progressBar'); if (bar) bar.style.width = pct + '%';
   // show required next-start letter
   if (isAlfa || isNormal || isSeq || isSeqFull){
@@ -661,10 +731,10 @@ function updateUI(){
       const shouldPulse = requiredLabel !== lastRenderedRequiredLetter;
       renderSessionInfo(requiredLabel, null, shouldPulse);
       lastRenderedRequiredLetter = requiredLabel;
-      // check for available countries matching required rule
+      // Check for available entries matching the required rule.
       const available = (isAlfa || isNormal)
-        ? findAvailableCountries(req, remainingLettersSet, false)  // Alfaquest: any country with correct start is valid
-        : findAvailableCountries(req, remainingLettersSet, isSeqFull);
+        ? findAvailableEntries(req, remainingLettersSet, false)
+        : findAvailableEntries(req, remainingLettersSet, isSeqFull);
       const statusEl = document.getElementById('status');
       const submitBtn = document.getElementById('submitCountry');
       const input = document.getElementById('countryInput');
@@ -675,24 +745,24 @@ function updateUI(){
         if (input) input.disabled = true;
       } else if (available.length === 0){
         if (statusEl){
-          statusEl.textContent = 'No valid countries for required: ' + (req ? req.toUpperCase() : '?');
+          statusEl.textContent = 'No valid ' + ACTIVE_CATEGORY.plural + ' for required: ' + (req ? req.toUpperCase() : '?');
           statusEl.className = 'status-danger';
         }
         if (!gameOver){
           gameOver = true;
-          // give a specific reason why there are no valid countries
+          // Give a specific reason why there are no valid entries.
           const letter = (req || '?').toUpperCase();
-          const allForLetter = COUNTRY_LIST.filter(c => c && c.charAt(0) === (req||'').toLowerCase());
+          const allForLetter = ENTRY_LIST.filter(c => c && c.charAt(0) === (req||'').toLowerCase());
           const unusedForLetter = allForLetter.filter(c => submitted.indexOf(c) === -1);
           let reason;
           if (allForLetter.length === 0){
-            reason = 'There are no countries beginning with "' + letter + '" in the list.';
+            reason = 'There are no ' + ACTIVE_CATEGORY.plural + ' beginning with "' + letter + '" in the list.';
           } else if (unusedForLetter.length === 0){
-            reason = 'All countries beginning with "' + letter + '" have already been used.';
+            reason = 'All ' + ACTIVE_CATEGORY.plural + ' beginning with "' + letter + '" have already been used.';
           } else {
             reason = (isAlfa || isNormal)
-              ? 'All remaining countries beginning with "' + letter + '" are no longer valid from this position.'
-              : 'All remaining countries beginning with "' + letter + '" contain only letters already collected.';
+              ? 'All remaining ' + ACTIVE_CATEGORY.plural + ' beginning with "' + letter + '" are no longer valid from this position.'
+              : 'All remaining ' + ACTIVE_CATEGORY.plural + ' beginning with "' + letter + '" contain only letters already collected.';
           }
           showResetRequiredToast('Game over — required start is "' + letter + '". ' + reason, 'error');
         }
@@ -705,10 +775,22 @@ function updateUI(){
         if (input) input.disabled = false;
       }
     }catch(e){
-      if (e && e.message && e.message.indexOf('GAME OVER') !== -1){
+      if (e?.code === 'DEAD_END' || (e?.message && e.message.indexOf('GAME OVER') !== -1)){
+        const statusEl = document.getElementById('status');
+        const submitBtn = document.getElementById('submitCountry');
+        const input = document.getElementById('countryInput');
+        if (statusEl) {
+          statusEl.textContent = 'Game over — dead end';
+          statusEl.className = 'status-danger';
+        }
+        if (submitBtn) submitBtn.disabled = true;
+        if (input) input.disabled = true;
         if (!gameOver){
           gameOver = true;
-          showResetRequiredToast(e.message, 'error');
+          const message = e.code === 'DEAD_END'
+            ? 'Game over — ' + e.message
+            : e.message;
+          showResetRequiredToast(message, 'error');
         }
       }
     }
@@ -722,13 +804,13 @@ function updateUI(){
       const unreachable = findUnreachableRemainingLetters(remainingLettersSet);
       if (remainingLetters.length > 0 && unreachable.length > 0){
         if (statusEl){
-          statusEl.textContent = 'No valid countries can add required remaining letters.';
+          statusEl.textContent = 'No valid ' + ACTIVE_CATEGORY.plural + ' can add required remaining letters.';
           statusEl.className = 'status-danger';
         }
         if (!gameOver){
           gameOver = true;
           const rem = unreachable.map(ch => ch.toUpperCase()).join(', ');
-          showResetRequiredToast('Game over — no unused country can add the remaining letter(s): ' + rem + '.', 'error');
+          showResetRequiredToast('Game over — no unused ' + ACTIVE_CATEGORY.singular + ' can add the remaining letter(s): ' + rem + '.', 'error');
         }
         if (submitBtn) submitBtn.disabled = true;
         if (input) input.disabled = true;
@@ -751,10 +833,10 @@ function updateUI(){
   }
 }
 
-function findAvailableCountries(required, remainingSet, requireNewLetterBeyondStart){
+function findAvailableEntries(required, remainingSet, requireNewLetterBeyondStart){
   if (!required) return [];
   const out = [];
-  for (const c of COUNTRY_LIST){
+  for (const c of ENTRY_LIST){
     if (!c || c.charAt(0) !== required) continue;
     if (submitted.indexOf(c) !== -1) continue;
     if (!requireNewLetterBeyondStart){
@@ -762,7 +844,7 @@ function findAvailableCountries(required, remainingSet, requireNewLetterBeyondSt
       continue;
     }
     // For Alfaquest (requireNewLetterBeyondStart=true with usedLetters): 
-    // Check if country contains at least one letter not yet collected
+    // Check whether the entry contains at least one uncollected letter.
     let hasNewLetter = false;
     for (const ch of c){ 
       if (ch >= 'a' && ch <= 'z' && !usedLetters.has(ch)){ 
@@ -775,9 +857,9 @@ function findAvailableCountries(required, remainingSet, requireNewLetterBeyondSt
   return out;
 }
 
-function findContributingCountriesAnyStart(remainingSet){
+function findContributingEntriesAnyStart(remainingSet){
   const out = [];
-  for (const c of COUNTRY_LIST){
+  for (const c of ENTRY_LIST){
     if (!c) continue;
     if (submitted.indexOf(c) !== -1) continue;
     for (const ch of c){
@@ -792,7 +874,7 @@ function findContributingCountriesAnyStart(remainingSet){
 
 function findUnreachableRemainingLetters(remainingSet){
   const canStillCollect = new Set();
-  for (const c of COUNTRY_LIST){
+  for (const c of ENTRY_LIST){
     if (!c) continue;
     if (submitted.indexOf(c) !== -1) continue;
     for (const ch of c){
@@ -807,21 +889,15 @@ function findUnreachableRemainingLetters(remainingSet){
 }
 
 function getNextSequentialRequiredLetter(){
-  return getAlphabeticalRequiredStart(usedLetters);
+  return getAlphabeticalRequiredStart(usedLetters, ACTIVE_CATEGORY);
 }
 
 function isSequenceModeComplete(){
-  const hasW = usedLetters.has('w');
-  const hasX = usedLetters.has('x');
-  const hasZ = usedLetters.has('z');
-  const last = submitted.length ? normalize(submitted[submitted.length - 1]) : '';
-  const lastStartsZ = !!last && last.charAt(0) === 'z';
-  const coreDone = GAME_ALPH.filter(ch => ch !== 'z').every(ch => usedLetters.has(ch));
-  return coreDone && hasW && hasX && (hasZ || lastStartsZ);
+  return COLLECTIBLE_ALPH.every((letter) => usedLetters.has(letter));
 }
 
 function getSequentialCollectedLetters(word, baseUsedLetters){
-  return getEngineSequentialCollectedLetters(word, baseUsedLetters);
+  return getEngineSequentialCollectedLetters(word, baseUsedLetters, ACTIVE_CATEGORY);
 }
 
 function getAllNewLetters(word, baseUsedLetters){
@@ -839,7 +915,7 @@ function getAllNewLetters(word, baseUsedLetters){
 function formatDisplayWithHighlights(nameLower, highlights, startLetter, activeLetter){
   // convert lower-case stored name to title case, then uppercase characters that are in highlights
   // Prefer canonical display name if available
-  const displayMap = (typeof window !== 'undefined' && window._alfa_country_display) ? window._alfa_country_display : null;
+  const displayMap = (typeof window !== 'undefined' && window._alfa_entry_display) ? window._alfa_entry_display : null;
   const base = displayMap && displayMap[nameLower] ? displayMap[nameLower] : titleCase(nameLower);
   const start = normalize(startLetter).charAt(0);
   const active = normalize(activeLetter).charAt(0);
@@ -875,7 +951,7 @@ function formatDisplayWithHighlights(nameLower, highlights, startLetter, activeL
 
 // compute required starting letter for next submission, following alfaquest rules
 function getRequiredStart(submittedList){
-  return getDerivedRequiredStart(submittedList);
+  return getDerivedRequiredStart(submittedList, ACTIVE_CATEGORY);
 }
 
 function renderLetterGrid(){
@@ -897,7 +973,11 @@ function renderLetterGrid(){
     const classes = ['letter-cell'];
     if (isAlfa){
       const isIgnoredStart = IGNORED.indexOf(ch) !== -1;
-      if (isIgnoredStart) classes.push('ignored-letter');
+      if (isIgnoredStart && usedLetters.has(ch)) {
+        classes.push('unavailable-collected');
+        div.title = 'Unavailable starting letter collected indirectly';
+      }
+      else if (isIgnoredStart) classes.push('ignored-letter');
       else if (usedStarts.has(ch)) classes.push('start-used');
       else if (ch === required) classes.push('next-required');
       else classes.push('unrevealed');
@@ -916,7 +996,7 @@ function renderLetterGrid(){
   }
 }
 
-function addCountryLocal(name){
+function addEntryLocal(name){
   const n = normalize(name);
   const isAlfa = isAlfaMode();
   const isEasyFill = isEasyAlfafillMode();
@@ -924,10 +1004,10 @@ function addCountryLocal(name){
   const isSeq = isSequentialAlfafillMode();
   const isSeqFull = isSequentialFullCollectMode();
   let requiredStart = null;
-  if (!n) return showErrorToast('Enter a country name');
+  if (!n) return showErrorToast('Enter ' + ACTIVE_CATEGORY.singular + ' name');
   if (gameOver) return showErrorToast('Game is over - reset to play again');
-  if (submitted.indexOf(n) !== -1) return showErrorToast('Country already submitted');
-  if (COUNTRY_LIST.indexOf(n) === -1) return showErrorToast('Country not in list or misspelled');
+  if (submitted.indexOf(n) !== -1) return showErrorToast(capitalize(ACTIVE_CATEGORY.singular) + ' already submitted');
+  if (ENTRY_LIST.indexOf(n) === -1) return showErrorToast(capitalize(ACTIVE_CATEGORY.singular) + ' not in list or misspelled');
   // ensure used-starts up to date and block reused starts
   recomputeUsedStarts();
   if (!isEasyFill && !isSeq && !isSeqFull && usedStarts.has(n.charAt(0))) return showErrorToast('Starting letter already used');
@@ -944,31 +1024,31 @@ function addCountryLocal(name){
       }catch(e){ return showErrorToast(e.message); }
     }
   }
-  // ensure the country contributes according to active mode
+  // Ensure the entry contributes according to the active mode.
   let collectedSeq = [];
   let collectedAll = [];
   if (isSeq){
     collectedSeq = getSequentialCollectedLetters(n, usedLetters);
-    if (collectedSeq.length === 0) return showErrorToast('This country does not collect the next required letter(s) in sequence');
+    if (collectedSeq.length === 0) return showErrorToast('This ' + ACTIVE_CATEGORY.singular + ' does not collect the next required letter(s) in sequence');
     if (requiredStart && collectedSeq.length === 1 && collectedSeq[0] === requiredStart){
       gameOver = true;
       const submitBtn = document.getElementById('submitCountry');
       const input = document.getElementById('countryInput');
       if (submitBtn) submitBtn.disabled = true;
       if (input) input.disabled = true;
-      showResetRequiredToast('Dead-end move: this country only collects the required letter and does not create a valid continuation. GAME OVER.', 'error');
+      showResetRequiredToast('Dead-end move: this ' + ACTIVE_CATEGORY.singular + ' only collects the required letter and does not create a valid continuation. GAME OVER.', 'error');
       return;
     }
   } else if (isSeqFull){
     collectedAll = getAllNewLetters(n, usedLetters);
-    if (collectedAll.length === 0) return showErrorToast('This country does not introduce any new letters');
+    if (collectedAll.length === 0) return showErrorToast('This ' + ACTIVE_CATEGORY.singular + ' does not introduce any new letters');
     if (requiredStart && collectedAll.length === 1 && collectedAll[0] === requiredStart){
       gameOver = true;
       const submitBtn = document.getElementById('submitCountry');
       const input = document.getElementById('countryInput');
       if (submitBtn) submitBtn.disabled = true;
       if (input) input.disabled = true;
-      showResetRequiredToast('Dead-end move: this country only collects the required letter and does not create a valid continuation. GAME OVER.', 'error');
+      showResetRequiredToast('Dead-end move: this ' + ACTIVE_CATEGORY.singular + ' only collects the required letter and does not create a valid continuation. GAME OVER.', 'error');
       return;
     }
   } else if (isNormal) {
@@ -992,13 +1072,13 @@ function addCountryLocal(name){
       if (submitBtn) submitBtn.disabled = true;
       if (input) input.disabled = true;
       showResetRequiredToast('Game over — this submission does not introduce any new letters.', 'error');
-      return;
+      return true;
     }
   } else if (isEasyFill) {
     // Easy Alfafill mode: must contribute at least one new letter
     const letters = new Set(); for (const ch of n) if (ch >= 'a' && ch <= 'z') letters.add(ch);
     let contributes = false; for (const ch of letters) if (!usedLetters.has(ch)) { contributes = true; break; }
-    if (!contributes) return showErrorToast('This country does not introduce any new letters');
+    if (!contributes) return showErrorToast('This ' + ACTIVE_CATEGORY.singular + ' does not introduce any new letters');
   }
   submitted.push(n);
   if (isAlfaScoringMode()) {
@@ -1007,8 +1087,19 @@ function addCountryLocal(name){
     syncLiveScoreTimer();
   }
   if (isAlfaScoringMode()) {
-    submissionScores.push(scoreWord(n, submitted.length));
+    const unavailableBonus = getUnavailableBonus(n);
+    submissionScores.push(scoreWord(n, submitted.length) + unavailableBonus.score);
+    unavailableBonuses.push(unavailableBonus.score);
+    unavailableBonusLetters.push(unavailableBonus.letters);
     speedBonuses.push(computeSpeedBonus(n, consumeEntryElapsedMs()));
+    if (unavailableBonus.score > 0) {
+      showSuccessToast(
+        'Unavailable letter bonus: ' +
+        unavailableBonus.letters.map((letter) => letter.toUpperCase()).join(', ') +
+        ' +' + unavailableBonus.score,
+        3200
+      );
+    }
   }
   if (!isSeq && !isSeqFull) usedStarts.add(n.charAt(0));
   if (isSeq){
@@ -1020,13 +1111,16 @@ function addCountryLocal(name){
   }
   updateUI();
   saveLocal();
+  return true;
 }
 
 function saveLocal(){
   try{
-    localStorage.setItem('allletters_submitted', JSON.stringify(submitted));
-    localStorage.setItem('allletters_used', JSON.stringify(Array.from(usedLetters)));
-    localStorage.setItem('allletters_scores', JSON.stringify(submissionScores));
+    localStorage.setItem(STORAGE_NAMESPACE + '_submitted', JSON.stringify(submitted));
+    localStorage.setItem(STORAGE_NAMESPACE + '_used', JSON.stringify(Array.from(usedLetters)));
+    localStorage.setItem(STORAGE_NAMESPACE + '_scores', JSON.stringify(submissionScores));
+    localStorage.setItem(STORAGE_NAMESPACE + '_unavailable_bonuses', JSON.stringify(unavailableBonuses));
+    localStorage.setItem(STORAGE_NAMESPACE + '_unavailable_bonus_letters', JSON.stringify(unavailableBonusLetters));
   }catch(e){}
 }
 function loadLocal(){
@@ -1034,10 +1128,12 @@ function loadLocal(){
     const isAlfa = isAlfaMode();
     if (isAlfa){
       // In Alfaquest (original game) mode we don't persist across refreshes — clear any saved state
-      try{ localStorage.removeItem('allletters_submitted'); localStorage.removeItem('allletters_used'); localStorage.removeItem('allletters_scores'); }catch(e){}
+      try{ localStorage.removeItem(STORAGE_NAMESPACE + '_submitted'); localStorage.removeItem(STORAGE_NAMESPACE + '_used'); localStorage.removeItem(STORAGE_NAMESPACE + '_scores'); localStorage.removeItem(STORAGE_NAMESPACE + '_unavailable_bonuses'); localStorage.removeItem(STORAGE_NAMESPACE + '_unavailable_bonus_letters'); }catch(e){}
       submitted = [];
       usedLetters = new Set();
       submissionScores = [];
+      unavailableBonuses = [];
+      unavailableBonusLetters = [];
       speedBonuses = [];
       currentEntryStartedAtMs = null;
       runStartedAtMs = null;
@@ -1046,16 +1142,18 @@ function loadLocal(){
       return;
     }
     // In Alfafill mode, also reset on refresh.
-    try{ localStorage.removeItem('allletters_submitted'); localStorage.removeItem('allletters_used'); localStorage.removeItem('allletters_scores'); }catch(e){}
+    try{ localStorage.removeItem(STORAGE_NAMESPACE + '_submitted'); localStorage.removeItem(STORAGE_NAMESPACE + '_used'); localStorage.removeItem(STORAGE_NAMESPACE + '_scores'); localStorage.removeItem(STORAGE_NAMESPACE + '_unavailable_bonuses'); localStorage.removeItem(STORAGE_NAMESPACE + '_unavailable_bonus_letters'); }catch(e){}
     submitted = [];
     usedLetters = new Set();
     submissionScores = [];
+    unavailableBonuses = [];
+    unavailableBonusLetters = [];
     speedBonuses = [];
     currentEntryStartedAtMs = null;
     runStartedAtMs = null;
     runEndedAtMs = null;
     recomputeUsedStarts();
-  }catch(e){ submitted = []; usedLetters = new Set(); submissionScores = []; speedBonuses = []; currentEntryStartedAtMs = null; runStartedAtMs = null; runEndedAtMs = null; }
+  }catch(e){ submitted = []; usedLetters = new Set(); submissionScores = []; unavailableBonuses = []; unavailableBonusLetters = []; speedBonuses = []; currentEntryStartedAtMs = null; runStartedAtMs = null; runEndedAtMs = null; }
 }
 
 // Server session helpers (optional)
@@ -1064,7 +1162,7 @@ async function createSession(){
     const res = await fetch(apiUrl('/api/v1/sessions'), {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({ mode: ACTIVE_MODE })
+      body: JSON.stringify({ mode: ACTIVE_MODE, category: ACTIVE_CATEGORY.id })
     });
     const j = await res.json();
     if (j.session){ sessionName = j.session; renderSessionInfo(null, 'created'); showInfoToast('Session created: '+sessionName); }
@@ -1079,7 +1177,7 @@ async function submitToServer(text){
     const res = await fetch(url, {
       method:'POST',
       headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({country:text})
+      body: JSON.stringify({entry:text})
     });
     const j = await res.json();
     if (j.error) showErrorToast('Server error: '+j.error.message); else { renderSessionInfo(null, 'saved'); }
@@ -1096,10 +1194,37 @@ async function loadSessionStatus(){
     submitted = (j.game?.submitted || []).map(s => normalize(s));
     usedLetters = new Set(j.game?.usedLetters || []);
     if (isAlfaScoringMode()) {
-      submissionScores = submitted.map((entry, i) => scoreWord(entry, i + 1));
+      const storedBonuses = j.game?.unavailableBonuses || [];
+      const storedBonusLetters = j.game?.unavailableBonusLetters || [];
+      if (
+        storedBonuses.length === submitted.length &&
+        storedBonusLetters.length === submitted.length
+      ) {
+        unavailableBonuses = [...storedBonuses];
+        unavailableBonusLetters = storedBonusLetters.map((letters) => [...letters]);
+      } else {
+        const replayUsedLetters = new Set();
+        unavailableBonuses = [];
+        unavailableBonusLetters = [];
+        for (const entry of submitted) {
+          const letters = getNewUnavailableLetters(entry, replayUsedLetters, ACTIVE_CATEGORY);
+          unavailableBonusLetters.push(letters);
+          unavailableBonuses.push(
+            scoreUnavailableLetterBonus(entry, replayUsedLetters, ACTIVE_CATEGORY)
+          );
+          for (const letter of extractLetters(entry)) replayUsedLetters.add(letter);
+        }
+      }
+      const storedScores = j.game?.submissionScores || [];
+      submissionScores = storedScores.length === submitted.length &&
+        storedBonuses.length === submitted.length
+        ? [...storedScores]
+        : submitted.map((entry, i) => scoreWord(entry, i + 1) + unavailableBonuses[i]);
       speedBonuses = submitted.map(() => 0);
     } else {
       submissionScores = [];
+      unavailableBonuses = [];
+      unavailableBonusLetters = [];
       speedBonuses = [];
     }
     recomputeUsedStarts();
@@ -1111,6 +1236,8 @@ function resetLocal(){
   submitted = [];
   usedLetters = new Set();
   submissionScores = [];
+  unavailableBonuses = [];
+  unavailableBonusLetters = [];
   speedBonuses = [];
   currentEntryStartedAtMs = null;
   runStartedAtMs = null;
@@ -1129,7 +1256,7 @@ function resetLocal(){
   renderSessionInfo(null);
   lastRenderedRequiredLetter = null;
   gameOver = false;
-  // restore ignored starts (w,x) and recompute from empty submitted
+  // Restore this category's unavailable starts and recompute from empty submissions.
   recomputeUsedStarts();
   // re-enable inputs
   const submitBtn = document.getElementById('submitCountry');
@@ -1149,6 +1276,7 @@ function recomputeUsedStarts(){
 
 // Wire up UI
 window.addEventListener('load', ()=>{
+  applyCategoryCopy();
   ensureSubmittedLegend();
   loadHighScore(); loadLocal(); updateUI();
   if (window.ALFA_ENABLE_SERVER_SESSIONS) {
@@ -1170,9 +1298,9 @@ window.addEventListener('load', ()=>{
   document.getElementById('submitCountry').addEventListener('click', async ()=>{
     const text = input.value;
     if (!text) return;
-    addCountryLocal(text);
+    const accepted = addEntryLocal(text);
     // automatically persist to server when a session exists
-    if (sessionName){ await submitToServer(text); }
+    if (accepted && sessionName){ await submitToServer(text); }
     input.value = '';
   });
   input.addEventListener('keypress', (e)=>{ if (e.key === 'Enter'){ e.preventDefault(); document.getElementById('submitCountry').click(); } });

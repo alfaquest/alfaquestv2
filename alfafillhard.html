@@ -50,7 +50,7 @@
 </head>
 <body>
   <h1>Alfafill - Hard mode</h1>
-  <p>Same start-letter sequence rules, but every new letter in each valid answer is collected.</p>
+  <p>Category: <strong data-category-label>Countries of the World</strong>. Follow the start-letter sequence while collecting every new letter.</p>
   <div class="controls">
     <div style="flex:1">
       <em>You still must start with the required letter. Completion is when all 26 letters are collected.</em>
@@ -60,8 +60,8 @@
   <hr />
   <h2>Play: Alfafill - Hard mode</h2>
   <div class="instructions" style="margin-bottom:10px;color:var(--muted)">
-    <strong>How to play:</strong> Start from A and follow the required next starting letter each turn. W and X are skipped because no countries begin with those letters. Any valid submitted country collects all its new letters. You win when no letters remain.
-    <div><strong>Objective:</strong> Clear all remaining letters by following the required start path with minimal submissions.</div>
+    <strong>How to play:</strong> Start from the first available letter and follow the required next starting letter each turn. Any valid submitted <span data-category-singular>country</span> collects all its new letters. You win when no letters remain.
+    <div><strong>Objective:</strong> Clear all remaining letters with valid <span data-category-plural>countries</span> by following the required start path with minimal submissions.</div>
   </div>
   <div class="game-row">
     <input id="countryInput" placeholder="Type a country name..." />
@@ -87,12 +87,12 @@
         </div>
       </div>
       <div style="margin-top:8px"><span id="sessionInfo"></span></div>
-      <div class="footer-note">Submitted countries:</div>
+      <div class="footer-note">Submitted <span data-category-plural>countries</span>:</div>
       <ul id="submittedList"></ul>
       <div style="margin-top:8px;color:var(--muted)">Highlighted letter on the grid is your required next start.</div>
     </div>
   </div>
-  <p style="margin:18px 0 0"><a href="index.html" style="color:#7dd3fc;text-decoration:none">&larr; Return to main menu</a></p>
+  <p style="margin:18px 0 0"><a id="categoryBackLink" href="categories.html?mode=strict" style="color:#7dd3fc;text-decoration:none">&larr; Choose another category</a></p>
   <script src="scripts/runtime-config.js"></script>
   <script src="scripts/starfield-bg.js"></script>
   <script>window.ALFA_GAME_MODE = 'strict';</script>

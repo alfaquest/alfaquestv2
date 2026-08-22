@@ -5,32 +5,47 @@ import {
   extractLetters,
   replayGame,
   scoreWord,
-  submitCountry
+  submitEntry
 } from './shared/game-engine.js';
+import { DEFAULT_CATEGORY_ID, requireCategory } from './shared/categories.js';
 
 const JSON_HEADERS = Object.freeze({ 'Content-Type': 'application/json; charset=utf-8' });
 const MAX_BODY_BYTES = 8 * 1024;
-const MAX_COUNTRY_LENGTH = 120;
+const MAX_ENTRY_LENGTH = 120;
 const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 export class Session extends DurableObject {
-  async initialize(mode = 'fill') {
+  async initialize(mode = 'fill', category = DEFAULT_CATEGORY_ID) {
     const existing = await this.ctx.storage.get('game');
     if (existing) return existing;
 
-    const game = withMetadata(createGameState(mode));
+    const game = withMetadata(createGameState(mode, category));
     await this.persist(game);
     return game;
   }
 
-  async submit(country) {
+  async submit(entry) {
     const current = await this.initialize();
-    const next = submitCountry(current, country);
+    const next = submitEntry(current, entry);
+    const unavailableBonus = next.lastUnavailableBonus ?? 0;
     const submissionScores = [
       ...(current.submissionScores ?? []),
-      scoreWord(country, next.submitted.length)
+      scoreWord(entry, next.submitted.length, 2, current.category) + unavailableBonus
     ];
-    const game = withMetadata({ ...next, submissionScores });
+    const unavailableBonuses = [
+      ...(current.unavailableBonuses ?? []),
+      unavailableBonus
+    ];
+    const unavailableBonusLetters = [
+      ...(current.unavailableBonusLetters ?? []),
+      next.lastUnavailableLetters ?? []
+    ];
+    const game = withMetadata({
+      ...next,
+      submissionScores,
+      unavailableBonuses,
+      unavailableBonusLetters
+    });
     await this.persist(game);
     return game;
   }
@@ -39,9 +54,12 @@ export class Session extends DurableObject {
     return this.initialize();
   }
 
-  async reset(mode) {
+  async reset(mode, category) {
     const current = await this.ctx.storage.get('game');
-    const game = withMetadata(createGameState(mode ?? current?.mode ?? 'fill'));
+    const game = withMetadata(createGameState(
+      mode ?? current?.mode ?? 'fill',
+      category ?? current?.category ?? DEFAULT_CATEGORY_ID
+    ));
     await this.persist(game);
     return game;
   }
@@ -102,7 +120,11 @@ async function routeRequest(request, url, env) {
   if (request.method === 'POST' && url.pathname === '/api/v1/sessions') {
     const body = await readJson(request);
     const session = sanitizeSessionName(body.name) || crypto.randomUUID();
-    const game = await sessionStub(env, session).initialize(body.mode);
+    const category = requireCategory(body.category ?? DEFAULT_CATEGORY_ID);
+    const game = await sessionStub(env, session).initialize(
+      body.mode,
+      category.id
+    );
     return json({ session, game }, 201);
   }
 
@@ -116,15 +138,18 @@ async function routeRequest(request, url, env) {
 
     if (request.method === 'POST' && versioned.action === 'submissions') {
       const body = await readJson(request);
-      const country = boundedCountry(body.country);
-      return json({ session: versioned.session, game: await stub.submit(country) });
+      const entry = boundedEntry(body.entry ?? body.country);
+      return json({ session: versioned.session, game: await stub.submit(entry) });
     }
 
     if (request.method === 'POST' && versioned.action === 'reset') {
       const body = await readJson(request, true);
+      const category = body.category === undefined
+        ? undefined
+        : requireCategory(body.category).id;
       return json({
         session: versioned.session,
-        game: await stub.reset(body.mode)
+        game: await stub.reset(body.mode, category)
       });
     }
   }
@@ -139,7 +164,11 @@ async function routeCompatibility(request, url, env) {
   if (request.method === 'POST' && url.pathname === '/session/create') {
     const body = await readJson(request, true);
     const session = sanitizeSessionName(body.name) || crypto.randomUUID();
-    const game = await sessionStub(env, session).initialize(body.mode);
+    const category = requireCategory(body.category ?? DEFAULT_CATEGORY_ID);
+    const game = await sessionStub(env, session).initialize(
+      body.mode,
+      category.id
+    );
     return json({ session, ...legacyGame(game) });
   }
 
@@ -211,13 +240,23 @@ async function readJson(request, optional = false) {
   }
 }
 
-function boundedCountry(value) {
-  const country = String(value ?? '').trim();
-  if (!country) throw apiError('COUNTRY_REQUIRED', 'Country is required.');
-  if (country.length > MAX_COUNTRY_LENGTH) {
-    throw apiError('COUNTRY_TOO_LONG', 'Country is too long.');
+function boundedEntry(value) {
+  const entry = String(value ?? '').trim();
+  if (!entry) throw apiError('ENTRY_REQUIRED', 'Entry is required.');
+  if (entry.length > MAX_ENTRY_LENGTH) {
+    throw apiError('ENTRY_TOO_LONG', 'Entry is too long.');
   }
-  return country;
+  return entry;
+}
+
+function boundedCountry(value) {
+  try {
+    return boundedEntry(value);
+  } catch (error) {
+    if (error.code === 'ENTRY_REQUIRED') throw apiError('COUNTRY_REQUIRED', 'Country is required.');
+    if (error.code === 'ENTRY_TOO_LONG') throw apiError('COUNTRY_TOO_LONG', 'Country is too long.');
+    throw error;
+  }
 }
 
 function boundedWords(value, maximum = 24) {
@@ -277,6 +316,8 @@ function withMetadata(game) {
   return {
     ...game,
     submissionScores: game.submissionScores ?? [],
+    unavailableBonuses: game.unavailableBonuses ?? [],
+    unavailableBonusLetters: game.unavailableBonusLetters ?? [],
     updatedAt: new Date().toISOString()
   };
 }
@@ -289,7 +330,8 @@ function legacyGame(game) {
     count: game.usedLetters.length,
     texts: game.submitted,
     required: game.required,
-    mode: game.mode
+    mode: game.mode,
+    category: game.category
   };
 }
 
@@ -300,7 +342,11 @@ function apiError(code, message) {
 }
 
 function statusForError(error) {
-  if (error?.code === 'INVALID_COUNTRY' || error?.code === 'WRONG_START') return 422;
+  if (
+    error?.code === 'INVALID_COUNTRY' ||
+    error?.code === 'INVALID_ENTRY' ||
+    error?.code === 'WRONG_START'
+  ) return 422;
   if (error?.code === 'INTERNAL_ERROR' || error?.code === 'SESSION_BINDING_MISSING') return 500;
   return 400;
 }
