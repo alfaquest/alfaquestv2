@@ -1,35 +1,33 @@
 {
-  "name": "demo",
+  "name": "alfaword-games",
   "version": "1.0.0",
-  "description": "",
-  "main": "alfaquestv2.js",
+  "description": "Cloudflare-hosted Alfaquest word games",
+  "private": true,
+  "type": "module",
   "scripts": {
-    "test": "npm run test:games",
-    "test:games": "node scripts/test-game-types.js",
-    "start": "node alfaquestv2.js",
-    "build": "echo \"No build step for Netlify\"",
-    "perry": "node alfaquestv2.js",
-    "dada": "node alfaquestv2.js",
-    "cf:login": "npm exec --yes wrangler -- login",
-    "cf:publish-worker": "npm exec --yes wrangler -- deploy --config wrangler.worker.toml",
-    "cf:pages-publish": "npm exec --yes wrangler -- pages deploy . --project-name=alfaquest-pages --branch \"npx.cmd wrangler pages project create alfaquest-pages --production-branch main\"",
-    "cf:pages-publish:checked": "npm run test:games && npm run cf:pages-publish",
-    "cf:deploy:checked": "npm run test:games && npm run cf:publish-worker && npm run cf:pages-publish"
+    "build": "node scripts/build-static.js",
+    "dev": "wrangler dev --env staging --config wrangler.worker.jsonc",
+    "serve": "node scripts/simple-http-server.js",
+    "test": "npm run test:unit && npm run test:worker && npm run test:games",
+    "test:unit": "node --test test/unit/*.test.js",
+    "test:worker": "vitest run --config vitest.config.js",
+    "test:games": "npm run build && node scripts/test-game-types.js",
+    "typecheck": "wrangler types --config wrangler.worker.jsonc --check",
+    "check": "npm run test:unit && npm run test:worker && npm run build && npm run typecheck && npm run cf:dry-run",
+    "cf:login": "wrangler login",
+    "cf:dry-run": "wrangler deploy --dry-run --env=\"\" --config wrangler.worker.jsonc",
+    "cf:publish-worker": "wrangler deploy --env=\"\" --config wrangler.worker.jsonc",
+    "cf:publish-worker:staging": "wrangler deploy --env staging --config wrangler.worker.jsonc",
+    "cf:pages-publish": "wrangler pages deploy dist --project-name=alfaquest-pages --branch=main --config wrangler.pages.jsonc",
+    "cf:deploy:checked": "npm run check && npm run cf:publish-worker && npm run cf:pages-publish"
   },
   "author": "",
   "license": "ISC",
-  "dependencies": {
-    "express": "^4.22.2",
-    "jade": "^1.11.0",
-    "node-cache": "^5.1.2",
-    "node-fetch": "^3.3.2",
-    "nodemon": "^2.0.12",
-    "prompt-sync": "^4.2.0"
-  },
   "devDependencies": {
-    "miniflare": "^4.20260730.0",
-    "netlify-cli": "^23.15.1",
-    "puppeteer": "^24.43.1",
-    "wrangler": "^4"
+    "@cloudflare/vitest-plugin": "^1.0.0",
+    "@types/node": "^26.2.0",
+    "puppeteer-core": "^25.8.0",
+    "vitest": "^4.1.11",
+    "wrangler": "4.125.0"
   }
 }

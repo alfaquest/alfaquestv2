@@ -98,13 +98,9 @@
     </div>
   </div>
   <p style="margin:18px 0 0"><a href="index.html" style="color:#7dd3fc;text-decoration:none">&larr; Return to main menu</a></p>
-  <script>
-    window.ALFA_API_BASE = (location.hostname === '127.0.0.1' || location.hostname === 'localhost')
-      ? ''
-      : 'https://alfaquest-worker.judejs.workers.dev';
-  </script>
+  <script src="scripts/runtime-config.js"></script>
   <script src="scripts/starfield-bg.js"></script>
-  <script>window.ALFAFILL_EASY_MODE = true;</script>
-  <script src="allletters-game.js"></script>
+  <script>window.ALFA_GAME_MODE = 'easy';</script>
+  <script type="module" src="allletters-game.js"></script>
 </body>
 </html>

@@ -1,239 +1,306 @@
-// Module-style Cloudflare Worker with a `Session` Durable Object for incremental play
+import { DurableObject } from 'cloudflare:workers';
+import {
+  ALPHABET,
+  createGameState,
+  extractLetters,
+  replayGame,
+  scoreWord,
+  submitCountry
+} from './shared/game-engine.js';
 
-const countryList = [
-  "Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda",
-  "Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas",
-  "Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan",
-  "Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso",
-  "Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad",
-  "Chile","China","Colombia","Comoros","Republic of the Congo","Democratic Republic of the Congo",
-  "Costa Rica","Croatia","Cuba","Cyprus","Czechia","Denmark","Djibouti","Dominica","Dominican Republic",
-  "East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
-  "Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala",
-  "Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran",
-  "Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya",
-  "Kiribati","North Korea","South Korea","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon",
-  "Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","North Macedonia","Madagascar",
-  "Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius",
-  "Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique",
-  "Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria",
-  "Norway","Oman","Pakistan","Palestine","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines",
-  "Poland","Portugal","Qatar","Romania","Russia","Rwanda","St Kitts and Nevis","St Lucia","Saint Vincent and the Grenadines",
-  "Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone",
-  "Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Sudan","Spain",
-  "Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand",
-  "Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates",
-  "United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam",
-  "Yemen","Zambia","Zimbabwe"
-].map(s => s.toLowerCase());
+const JSON_HEADERS = Object.freeze({ 'Content-Type': 'application/json; charset=utf-8' });
+const MAX_BODY_BYTES = 8 * 1024;
+const MAX_COUNTRY_LENGTH = 120;
+const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
-const ALPH = "abcdefghijklmnopqrstuvyz".split(''); // original game letters (w,x omitted)
-const IGNORED = ['w','x'];
-const FULL_ALPH = "abcdefghijklmnopqrstuvwxyz".split(''); // new variant uses all letters
+export class Session extends DurableObject {
+  async initialize(mode = 'fill') {
+    const existing = await this.ctx.storage.get('game');
+    if (existing) return existing;
 
-function corsHeaders(origin){
+    const game = withMetadata(createGameState(mode));
+    await this.persist(game);
+    return game;
+  }
+
+  async submit(country) {
+    const current = await this.initialize();
+    const next = submitCountry(current, country);
+    const submissionScores = [
+      ...(current.submissionScores ?? []),
+      scoreWord(country, next.submitted.length)
+    ];
+    const game = withMetadata({ ...next, submissionScores });
+    await this.persist(game);
+    return game;
+  }
+
+  async status() {
+    return this.initialize();
+  }
+
+  async reset(mode) {
+    const current = await this.ctx.storage.get('game');
+    const game = withMetadata(createGameState(mode ?? current?.mode ?? 'fill'));
+    await this.persist(game);
+    return game;
+  }
+
+  async alarm() {
+    await this.ctx.storage.deleteAll();
+  }
+
+  async persist(game) {
+    await this.ctx.storage.put('game', game);
+    await this.ctx.storage.setAlarm(Date.now() + SESSION_TTL_MS);
+  }
+}
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const origin = request.headers.get('Origin');
+    const allowedOrigin = resolveAllowedOrigin(origin, env.ALLOWED_ORIGINS);
+
+    if (origin && !allowedOrigin) {
+      return json({ error: { code: 'ORIGIN_NOT_ALLOWED', message: 'Origin is not allowed.' } }, 403);
+    }
+
+    if (request.method === 'OPTIONS') {
+      return withCors(new Response(null, { status: 204 }), allowedOrigin);
+    }
+
+    try {
+      const response = await routeRequest(request, url, env);
+      return withCors(response, allowedOrigin);
+    } catch (error) {
+      const status = statusForError(error);
+      console.error(JSON.stringify({
+        event: 'request_failed',
+        path: url.pathname,
+        code: error?.code ?? 'INTERNAL_ERROR',
+        message: error?.message ?? 'Unknown error'
+      }));
+      return withCors(
+        json({
+          error: {
+            code: error?.code ?? 'INTERNAL_ERROR',
+            message: status === 500 ? 'Unexpected server error.' : error.message
+          }
+        }, status),
+        allowedOrigin
+      );
+    }
+  }
+};
+
+async function routeRequest(request, url, env) {
+  if (request.method === 'GET' && url.pathname === '/health') {
+    return json({ ok: true, environment: env.ENVIRONMENT ?? 'production' });
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/v1/sessions') {
+    const body = await readJson(request);
+    const session = sanitizeSessionName(body.name) || crypto.randomUUID();
+    const game = await sessionStub(env, session).initialize(body.mode);
+    return json({ session, game }, 201);
+  }
+
+  const versioned = matchSessionPath(url.pathname, '/api/v1/sessions/');
+  if (versioned) {
+    const stub = sessionStub(env, versioned.session);
+
+    if (request.method === 'GET' && versioned.action === '') {
+      return json({ session: versioned.session, game: await stub.status() });
+    }
+
+    if (request.method === 'POST' && versioned.action === 'submissions') {
+      const body = await readJson(request);
+      const country = boundedCountry(body.country);
+      return json({ session: versioned.session, game: await stub.submit(country) });
+    }
+
+    if (request.method === 'POST' && versioned.action === 'reset') {
+      const body = await readJson(request, true);
+      return json({
+        session: versioned.session,
+        game: await stub.reset(body.mode)
+      });
+    }
+  }
+
+  const compatibility = await routeCompatibility(request, url, env);
+  if (compatibility) return compatibility;
+
+  return json({ error: { code: 'NOT_FOUND', message: 'Route not found.' } }, 404);
+}
+
+async function routeCompatibility(request, url, env) {
+  if (request.method === 'POST' && url.pathname === '/session/create') {
+    const body = await readJson(request, true);
+    const session = sanitizeSessionName(body.name) || crypto.randomUUID();
+    const game = await sessionStub(env, session).initialize(body.mode);
+    return json({ session, ...legacyGame(game) });
+  }
+
+  const legacy = matchSessionPath(url.pathname, '/session/');
+  if (legacy) {
+    const stub = sessionStub(env, legacy.session);
+    if (request.method === 'GET' && legacy.action === '') {
+      return json(legacyGame(await stub.status()));
+    }
+    if (request.method === 'POST' && legacy.action === 'submit') {
+      const body = await readJson(request);
+      return json(legacyGame(await stub.submit(boundedCountry(body.text))));
+    }
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/next') {
+    const body = await readJson(request);
+    const words = boundedWords(body.words);
+    const game = replayGame('classic', words);
+    return json({ next: game.required?.toUpperCase() ?? null, used: game.usedStarts });
+  }
+
+  if (request.method === 'POST' && url.pathname === '/api/letters') {
+    const body = await readJson(request);
+    const words = boundedWords(body.words, 100);
+    const used = [...new Set(words.flatMap(extractLetters))].sort();
+    const remaining = ALPHABET.filter((letter) => !used.includes(letter));
+    return json({ used, remaining, success: remaining.length === 0, count: used.length });
+  }
+
+  return null;
+}
+
+function sessionStub(env, session) {
+  if (!env.SESSIONS) {
+    const error = new Error('Session storage binding is unavailable.');
+    error.code = 'SESSION_BINDING_MISSING';
+    throw error;
+  }
+  return env.SESSIONS.getByName(session);
+}
+
+function matchSessionPath(pathname, prefix) {
+  if (!pathname.startsWith(prefix)) return null;
+  const parts = pathname.slice(prefix.length).split('/').filter(Boolean);
+  if (parts.length === 0 || parts.length > 2) return null;
   return {
-    'Access-Control-Allow-Origin': origin || '*',
-    'Access-Control-Allow-Methods': 'GET,POST,OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Max-Age': '86400'
+    session: sanitizeSessionName(decodeURIComponent(parts[0])),
+    action: parts[1] ?? ''
   };
 }
 
-function withCors(response, origin){
+async function readJson(request, optional = false) {
+  const contentLength = Number(request.headers.get('Content-Length') ?? 0);
+  if (contentLength > MAX_BODY_BYTES) {
+    throw apiError('BODY_TOO_LARGE', 'Request body is too large.');
+  }
+
+  const text = await request.text();
+  if (!text && optional) return {};
+  if (text.length > MAX_BODY_BYTES) {
+    throw apiError('BODY_TOO_LARGE', 'Request body is too large.');
+  }
+
+  try {
+    return JSON.parse(text || '{}');
+  } catch {
+    throw apiError('INVALID_JSON', 'Request body must be valid JSON.');
+  }
+}
+
+function boundedCountry(value) {
+  const country = String(value ?? '').trim();
+  if (!country) throw apiError('COUNTRY_REQUIRED', 'Country is required.');
+  if (country.length > MAX_COUNTRY_LENGTH) {
+    throw apiError('COUNTRY_TOO_LONG', 'Country is too long.');
+  }
+  return country;
+}
+
+function boundedWords(value, maximum = 24) {
+  if (!Array.isArray(value) || value.length === 0) {
+    throw apiError('WORDS_REQUIRED', 'At least one country is required.');
+  }
+  if (value.length > maximum) {
+    throw apiError('TOO_MANY_WORDS', `No more than ${maximum} countries are allowed.`);
+  }
+  return value.map(boundedCountry);
+}
+
+function sanitizeSessionName(value) {
+  if (value === undefined || value === null || value === '') return '';
+  const session = String(value).trim();
+  if (!/^[A-Za-z0-9_-]{1,80}$/.test(session)) {
+    throw apiError(
+      'INVALID_SESSION',
+      'Session must contain only letters, numbers, underscores, or hyphens.'
+    );
+  }
+  return session;
+}
+
+function resolveAllowedOrigin(origin, configuredOrigins = '') {
+  if (!origin) return null;
+  const allowed = String(configuredOrigins)
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+  return allowed.includes(origin) ? origin : null;
+}
+
+function withCors(response, origin) {
+  if (!origin) return response;
   const headers = new Headers(response.headers);
-  const c = corsHeaders(origin);
-  for (const k of Object.keys(c)) headers.set(k, c[k]);
-  return new Response(response.body, { status: response.status, statusText: response.statusText, headers });
+  headers.set('Access-Control-Allow-Origin', origin);
+  headers.set('Access-Control-Allow-Methods', 'GET,POST,OPTIONS');
+  headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  headers.set('Access-Control-Max-Age', '86400');
+  headers.append('Vary', 'Origin');
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers
+  });
 }
 
-// Helper: extract a-z letters from a string
-function extractLetters(s){
-  const out = new Set();
-  for (let i=0;i<s.length;i++){
-    const ch = s.charAt(i).toLowerCase();
-    if (ch >= 'a' && ch <= 'z') out.add(ch);
-  }
-  return Array.from(out);
+function json(payload, status = 200) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: JSON_HEADERS
+  });
 }
 
-// Durable Object class to track session state incrementally
-export class Session {
-  constructor(state, env){
-    this.state = state;
-    this.env = env;
-  }
-
-  async ensureInitialized(){
-    const init = await this.state.storage.get('init');
-    if (!init){
-      await this.state.storage.put('letters', []);
-      await this.state.storage.put('texts', []);
-      await this.state.storage.put('init', true);
-    }
-  }
-
-  async fetch(request){
-    const url = new URL(request.url);
-    await this.ensureInitialized();
-
-    if (request.method === 'POST' && url.pathname === '/submit'){
-      // Accept JSON { text: "..." }
-      try {
-        const body = await request.json();
-        const text = String(body.text || '');
-        if (!text) return new Response(JSON.stringify({error:'No text provided'}), {status:400, headers:{'Content-Type':'application/json'}});
-
-        // update stored texts
-        const texts = (await this.state.storage.get('texts')) || [];
-        texts.push(text);
-        await this.state.storage.put('texts', texts);
-
-        // update letters
-        const letters = new Set((await this.state.storage.get('letters')) || []);
-        const extracted = extractLetters(text);
-        for (const ch of extracted) letters.add(ch);
-        const lettersArr = Array.from(letters).sort();
-        await this.state.storage.put('letters', lettersArr);
-
-        const remaining = FULL_ALPH.filter(c => lettersArr.indexOf(c) === -1);
-        const success = remaining.length === 0;
-        return new Response(JSON.stringify({used: lettersArr, remaining, success, count: lettersArr.length}), {status:200, headers:{'Content-Type':'application/json'}});
-      } catch (e){
-        return new Response(JSON.stringify({error:'Invalid JSON body'}), {status:400, headers:{'Content-Type':'application/json'}});
-      }
-    }
-
-    if (request.method === 'GET' && url.pathname === '/status'){
-      const letters = (await this.state.storage.get('letters')) || [];
-      const texts = (await this.state.storage.get('texts')) || [];
-      const remaining = FULL_ALPH.filter(c => letters.indexOf(c) === -1);
-      const success = remaining.length === 0;
-      return new Response(JSON.stringify({used: letters, remaining, success, count: letters.length, texts}), {status:200, headers:{'Content-Type':'application/json'}});
-    }
-
-    return new Response('Not Found', {status:404});
-  }
+function withMetadata(game) {
+  return {
+    ...game,
+    submissionScores: game.submissionScores ?? [],
+    updatedAt: new Date().toISOString()
+  };
 }
 
-// Main worker fetch handler (module-style) — routes to existing APIs and session endpoints
-export default {
-  async fetch(request, env){
-    const url = new URL(request.url);
-    const origin = request.headers.get('Origin') || '*';
-
-    if (request.method === 'OPTIONS') {
-      return new Response(null, { status: 204, headers: corsHeaders(origin) });
-    }
-
-    // Session management endpoints (incremental play)
-    // Create session: POST /session/create with optional {name}
-    if (request.method === 'POST' && url.pathname === '/session/create'){
-      try {
-        const body = await request.json();
-        const name = (body && body.name) ? String(body.name) : crypto.randomUUID();
-        // Use idFromName so same name maps to same DO instance; deterministic
-        const id = env.SESSIONS.idFromName(name);
-        const stub = env.SESSIONS.get(id);
-        // Ensure initialization by calling status
-        await stub.fetch(new Request('https://dummy/status'));
-        return withCors(new Response(JSON.stringify({session: name}), {status:200, headers:{'Content-Type':'application/json'}}), origin);
-      } catch (e){
-        return withCors(new Response(JSON.stringify({error:'Invalid JSON body'}), {status:400, headers:{'Content-Type':'application/json'}}), origin);
-      }
-    }
-
-    // Submit text to session: POST /session/:name/submit
-    if (request.method === 'POST' && url.pathname.startsWith('/session/') && url.pathname.endsWith('/submit')){
-      const parts = url.pathname.split('/');
-      // ['', 'session', ':name', 'submit']
-      if (parts.length >= 4){
-        const name = parts[2];
-        const id = env.SESSIONS.idFromName(name);
-        const stub = env.SESSIONS.get(id);
-        // forward the body to DO
-        const forwarded = await stub.fetch(new Request('https://dummy/submit', {method:'POST', body: await request.text(), headers: {'Content-Type': request.headers.get('Content-Type') || 'application/json'}}));
-        return withCors(forwarded, origin);
-      }
-    }
-
-    // Get session status: GET /session/:name
-    if (request.method === 'GET' && url.pathname.startsWith('/session/')){
-      const parts = url.pathname.split('/');
-      // ['', 'session', ':name']
-      if (parts.length >= 3){
-        const name = parts[2];
-        const id = env.SESSIONS.idFromName(name);
-        const stub = env.SESSIONS.get(id);
-        const forwarded = await stub.fetch(new Request('https://dummy/status'));
-        return withCors(forwarded, origin);
-      }
-    }
-
-    // Keep original API endpoints for compatibility
-    if (request.method === 'POST' && url.pathname === '/api/letters'){
-      try {
-        const body = await request.json();
-        const words = Array.isArray(body.words) ? body.words.map(w => String(w).toLowerCase()) : [];
-        if (words.length === 0) return withCors(new Response(JSON.stringify({error:'No words submitted'}), {status:400, headers:{'Content-Type':'application/json'}}), origin);
-        const combined = words.join('');
-        const used = [];
-        for (const ch of FULL_ALPH){ if (combined.indexOf(ch) !== -1) used.push(ch); }
-        const remaining = FULL_ALPH.filter(c => used.indexOf(c) === -1);
-        const success = remaining.length === 0;
-        return withCors(new Response(JSON.stringify({used, remaining, success, count: used.length}), {status:200, headers:{'Content-Type':'application/json'}}), origin);
-      } catch (e){
-        return withCors(new Response(JSON.stringify({error:'Invalid JSON body'}), {status:400, headers:{'Content-Type':'application/json'}}), origin);
-      }
-    }
-
-    // legacy /api/next kept for compatibility (stateless)
-    if (request.method === 'POST' && url.pathname === '/api/next'){
-      try {
-        const body = await request.json();
-        const words = Array.isArray(body.words) ? body.words.map(w => String(w).toLowerCase()) : [];
-        const result = computeNext(words);
-        if (result.error) return withCors(new Response(JSON.stringify({error: result.error}), {status: result.status || 400, headers:{'Content-Type':'application/json'}}), origin);
-        return withCors(new Response(JSON.stringify({next: result.next, used: result.used}), {status:200, headers:{'Content-Type':'application/json'}}), origin);
-      } catch (e){
-        return withCors(new Response(JSON.stringify({error:'Invalid JSON body'}), {status:400, headers:{'Content-Type':'application/json'}}), origin);
-      }
-    }
-
-    return withCors(new Response('Not Found', {status:404}), origin);
-  }
+function legacyGame(game) {
+  return {
+    used: game.usedLetters,
+    remaining: ALPHABET.filter((letter) => !game.usedLetters.includes(letter)),
+    success: game.complete,
+    count: game.usedLetters.length,
+    texts: game.submitted,
+    required: game.required,
+    mode: game.mode
+  };
 }
 
-// computeNext retained from original, stateless helper
-function computeNext(words){
-  let alpha = ALPH.slice();
-  let used = IGNORED.slice();
-  let prevCommon = null;
+function apiError(code, message) {
+  const error = new Error(message);
+  error.code = code;
+  return error;
+}
 
-  for (let i = 0; i < words.length; i++){
-    const w = words[i];
-    if (typeof w !== 'string' || w.length === 0) return {error: 'Invalid word at index '+i, status:400};
-    if (countryList.indexOf(w) === -1) return {error: 'Word not in country list: '+w, status:404};
-    if (used.indexOf(w.charAt(0)) !== -1) return {error: 'Word already used: '+w, status:404};
-
-    if (i === 0){
-      if (!w.startsWith('a')) return {error: 'First word must start with "a"', status:404};
-    } else {
-      if (w.charAt(0) !== prevCommon) return {error: 'Word starting letter does not match required letter', status:404};
-    }
-
-    used.push(w.charAt(0));
-    alpha = alpha.filter(c => c !== w.charAt(0));
-
-    let common = '';
-    for (let j = 0; j < w.length; j++){
-      if (alpha.indexOf(w.charAt(j)) !== -1){ common = w.charAt(j); break; }
-    }
-
-    if (common === '') return {error: 'You have ran out of letters, GAME OVER', status:400};
-    prevCommon = common;
-  }
-
-  if (words.length === 0) return {error: 'No words submitted', status:400};
-  return {next: prevCommon.toUpperCase(), used};
+function statusForError(error) {
+  if (error?.code === 'INVALID_COUNTRY' || error?.code === 'WRONG_START') return 422;
+  if (error?.code === 'INTERNAL_ERROR' || error?.code === 'SESSION_BINDING_MISSING') return 500;
+  return 400;
 }

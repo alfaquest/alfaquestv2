@@ -1,0 +1,55 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "alfaquest-worker",
+  "main": "worker.js",
+  "compatibility_date": "2026-08-22",
+  "workers_dev": true,
+  "routes": [
+    {
+      "pattern": "api.alfaword.games",
+      "custom_domain": true
+    }
+  ],
+  "observability": {
+    "enabled": true,
+    "head_sampling_rate": 1
+  },
+  "vars": {
+    "ENVIRONMENT": "production",
+    "ALLOWED_ORIGINS": "https://alfaword.games,https://www.alfaword.games"
+  },
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SESSIONS",
+        "class_name": "Session"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": [
+        "Session"
+      ]
+    }
+  ],
+  "env": {
+    "staging": {
+      "name": "alfaquest-worker-staging",
+      "workers_dev": true,
+      "vars": {
+        "ENVIRONMENT": "staging",
+        "ALLOWED_ORIGINS": "http://localhost:8000,http://127.0.0.1:8000"
+      },
+      "durable_objects": {
+        "bindings": [
+          {
+            "name": "SESSIONS",
+            "class_name": "Session"
+          }
+        ]
+      }
+    }
+  }
+}

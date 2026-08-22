@@ -1,77 +1,56 @@
 // allletters-game.js
-// Client-side interactive game: submit country names to collect all a-z letters.
+// Shared vanilla controller for all alfaword.games modes.
 
-const COUNTRY_LIST = (function(){
-  const orig = [
-"Afghanistan","Albania","Algeria","Andorra","Angola","Antigua and Barbuda",
-"Argentina","Armenia","Australia","Austria","Azerbaijan","Bahamas",
-"Bahrain","Bangladesh","Barbados","Belarus","Belgium","Belize","Benin","Bhutan",
-"Bolivia","Bosnia and Herzegovina","Botswana","Brazil","Brunei","Bulgaria","Burkina Faso",
-"Burundi","Cambodia","Cameroon","Canada","Cape Verde","Central African Republic","Chad",
-"Chile","China","Colombia","Comoros","Republic of the Congo","Democratic Republic of the Congo",
-"Costa Rica","Croatia","Cuba","Cyprus","Czechia","Denmark","Djibouti","Dominica","Dominican Republic",
-"East Timor","Ecuador","Egypt","El Salvador","Equatorial Guinea","Eritrea","Estonia","Eswatini","Ethiopia",
-"Fiji","Finland","France","Gabon","Gambia","Georgia","Germany","Ghana","Greece","Grenada","Guatemala",
-"Guinea","Guinea-Bissau","Guyana","Haiti","Honduras","Hungary","Iceland","India","Indonesia","Iran",
-"Iraq","Ireland","Israel","Italy","Ivory Coast","Jamaica","Japan","Jordan","Kazakhstan","Kenya",
-"Kiribati","North Korea","South Korea","Kosovo","Kuwait","Kyrgyzstan","Laos","Latvia","Lebanon",
-"Lesotho","Liberia","Libya","Liechtenstein","Lithuania","Luxembourg","North Macedonia","Madagascar",
-"Malawi","Malaysia","Maldives","Mali","Malta","Marshall Islands","Mauritania","Mauritius",
-"Mexico","Micronesia","Moldova","Monaco","Mongolia","Montenegro","Morocco","Mozambique",
-"Myanmar","Namibia","Nauru","Nepal","Netherlands","New Zealand","Nicaragua","Niger","Nigeria",
-"Norway","Oman","Pakistan","Palestine","Palau","Panama","Papua New Guinea","Paraguay","Peru","Philippines",
-"Poland","Portugal","Qatar","Romania","Russia","Rwanda","St Kitts and Nevis","St Lucia","Saint Vincent and the Grenadines",
-"Samoa","San Marino","Sao Tome and Principe","Saudi Arabia","Senegal","Serbia","Seychelles","Sierra Leone",
-"Singapore","Slovakia","Slovenia","Solomon Islands","Somalia","South Africa","South Sudan","Spain",
-"Sri Lanka","Sudan","Suriname","Sweden","Switzerland","Syria","Taiwan","Tajikistan","Tanzania","Thailand",
-"Togo","Tonga","Trinidad and Tobago","Tunisia","Turkey","Turkmenistan","Tuvalu","Uganda","Ukraine","United Arab Emirates",
-"United Kingdom","United States","Uruguay","Uzbekistan","Vanuatu","Vatican City","Venezuela","Vietnam",
-"Yemen","Zambia","Zimbabwe"
-  ];
-  if (typeof window !== 'undefined'){
-    window._alfa_country_display = window._alfa_country_display || {};
-    for (const s of orig) window._alfa_country_display[s.toLowerCase()] = s;
-    window._alfa_country_list = orig.map(s => s.toLowerCase());
-    return window._alfa_country_list;
-  }
-  return orig.map(s => s.toLowerCase());
-})();
+import {
+  COUNTRY_DISPLAY,
+  COUNTRY_NAMES,
+  normalizeCountry
+} from './shared/countries.js';
+import {
+  ALPHABET,
+  IGNORED_STARTS,
+  LETTER_SCORES,
+  STARTING_ALPHABET,
+  extractLetters,
+  getAlphabeticalRequiredStart,
+  getDerivedRequiredStart,
+  getSequentialCollectedLetters as getEngineSequentialCollectedLetters,
+  resolveMode,
+  scoreWord as scoreWordBase
+} from './shared/game-engine.js';
 
-const ALPH = 'abcdefghijklmnopqrstuvwxyz'.split('');
-const LETTER_SCORES = Object.freeze({
-  a: 100, b: 300, c: 300, d: 200, e: 100, f: 500, g: 300, h: 300, i: 100, j: 500,
-  k: 400, l: 200, m: 200, n: 100, o: 100, p: 300, q: 500, r: 100, s: 200, t: 200,
-  u: 200, v: 400, w: 400, x: 500, y: 400, z: 400
-});
+const COUNTRY_LIST = COUNTRY_NAMES.map((name) => name.toLowerCase());
+const ALPH = ALPHABET;
+const GAME_ALPH = STARTING_ALPHABET;
+const IGNORED = IGNORED_STARTS;
+const ACTIVE_MODE = resolveMode(window.ALFA_GAME_MODE).id;
 
-// Game sequencing alphabet: ignore 'w' and 'x' as starting letters per alfaquest rule
-const GAME_ALPH = ALPH.filter(c => c !== 'w' && c !== 'x');
-const IGNORED = ['w','x'];
+window._alfa_country_display = COUNTRY_DISPLAY;
+window._alfa_country_list = COUNTRY_LIST;
 
 function isAlfaMode(){
-  return (typeof window !== 'undefined') && window.ALFAQUEST_MODE === true;
+  return ACTIVE_MODE === 'classic';
 }
 
 function isEasyAlfafillMode(){
-  return !isAlfaMode() && (typeof window !== 'undefined') && window.ALFAFILL_EASY_MODE === true;
+  return ACTIVE_MODE === 'easy';
 }
 
 function isSequentialAlfafillMode(){
-  return !isAlfaMode() && (typeof window !== 'undefined') && window.ALFAFILL_SEQUENCE_MODE === true;
+  return ACTIVE_MODE === 'sequence';
 }
 
 function isSequentialFullCollectMode(){
-  return !isAlfaMode() && (typeof window !== 'undefined') && window.ALFAFILL_SEQUENCE_FULL_MODE === true;
+  return ACTIVE_MODE === 'strict';
 }
 
 function isNormalAlfafillMode(){
-  return !isAlfaMode() && !isEasyAlfafillMode() && !isSequentialAlfafillMode() && !isSequentialFullCollectMode();
+  return ACTIVE_MODE === 'fill';
 }
 
-function normalize(s){ return String(s||'').trim().toLowerCase(); }
+function normalize(s){ return normalizeCountry(s); }
 
-// Optional override for API host when pages and worker are on different origins.
-// Example: window.ALFA_API_BASE = 'https://alfaquest-worker.judejs.workers.dev'
+// Runtime config supplies the Worker host and may be overridden before this module loads.
 const API_BASE = (typeof window !== 'undefined' && typeof window.ALFA_API_BASE === 'string')
   ? window.ALFA_API_BASE.replace(/\/+$/, '')
   : '';
@@ -120,12 +99,7 @@ function isAlfaScoringMode(){
 }
 
 function scoreWord(word, moveNumber){
-  const n = normalize(word);
-  // First letter scores its base tier value
-  const firstCh = n.charAt(0);
-  const firstLetterScore = (firstCh && LETTER_SCORES[firstCh]) ? (LETTER_SCORES[firstCh] * ALFA_LETTER_SCORE_MULTIPLIER) : 0;
-  const positionBonus = moveNumber > 0 ? moveNumber * 100 : 0;
-  return firstLetterScore + positionBonus;
+  return scoreWordBase(word, moveNumber, ALFA_LETTER_SCORE_MULTIPLIER);
 }
 
 function getTotalScore(){
@@ -694,7 +668,12 @@ function updateUI(){
       const statusEl = document.getElementById('status');
       const submitBtn = document.getElementById('submitCountry');
       const input = document.getElementById('countryInput');
-      if (available.length === 0){
+      if (remainingCount === 0) {
+        gameOver = false;
+        if (statusEl){ statusEl.textContent = 'Complete'; statusEl.className = ''; }
+        if (submitBtn) submitBtn.disabled = true;
+        if (input) input.disabled = true;
+      } else if (available.length === 0){
         if (statusEl){
           statusEl.textContent = 'No valid countries for required: ' + (req ? req.toUpperCase() : '?');
           statusEl.className = 'status-danger';
@@ -828,10 +807,7 @@ function findUnreachableRemainingLetters(remainingSet){
 }
 
 function getNextSequentialRequiredLetter(){
-  for (const ch of GAME_ALPH){
-    if (!usedLetters.has(ch)) return ch;
-  }
-  return null;
+  return getAlphabeticalRequiredStart(usedLetters);
 }
 
 function isSequenceModeComplete(){
@@ -845,47 +821,13 @@ function isSequenceModeComplete(){
 }
 
 function getSequentialCollectedLetters(word, baseUsedLetters){
-  const usedBase = baseUsedLetters ? new Set(baseUsedLetters) : new Set();
-  let required = null;
-  for (const ch of GAME_ALPH){
-    if (!usedBase.has(ch)) { required = ch; break; }
-  }
-  if (!required) return [];
-
-  const n = normalize(word);
-  if (!n || n.charAt(0) !== required) return [];
-
-  const lettersInWord = new Set();
-  for (const ch of n) if (ch >= 'a' && ch <= 'z') lettersInWord.add(ch);
-
-  const collected = [];
-  const reqIdx = GAME_ALPH.indexOf(required);
-  for (let i = reqIdx; i < GAME_ALPH.length; i++){
-    const ch = GAME_ALPH[i];
-    if (usedBase.has(ch)) continue;
-    if (!lettersInWord.has(ch)) break;
-    collected.push(ch);
-    usedBase.add(ch);
-  }
-
-  // Only W and X may be picked up out of sequence in this mode.
-  for (const ch of ['w', 'x']){
-    if (lettersInWord.has(ch) && !usedBase.has(ch)){
-      collected.push(ch);
-      usedBase.add(ch);
-    }
-  }
-
-  return collected;
+  return getEngineSequentialCollectedLetters(word, baseUsedLetters);
 }
 
 function getAllNewLetters(word, baseUsedLetters){
   const usedBase = baseUsedLetters ? new Set(baseUsedLetters) : new Set();
-  const n = normalize(word);
-  const lettersInWord = new Set();
-  for (const ch of n) if (ch >= 'a' && ch <= 'z') lettersInWord.add(ch);
   const collected = [];
-  for (const ch of lettersInWord){
+  for (const ch of extractLetters(word)){
     if (!usedBase.has(ch)){
       collected.push(ch);
       usedBase.add(ch);
@@ -933,37 +875,14 @@ function formatDisplayWithHighlights(nameLower, highlights, startLetter, activeL
 
 // compute required starting letter for next submission, following alfaquest rules
 function getRequiredStart(submittedList){
-  const alpha = GAME_ALPH.slice();
-  const usedStarts = IGNORED.slice();
-  let prevCommon = null;
-
-  for (let i = 0; i < submittedList.length; i++){
-    const w = normalize(submittedList[i]);
-    if (!w) throw new Error('Invalid word at index '+i);
-    const start = w.charAt(0);
-    if (usedStarts.indexOf(start) !== -1) throw new Error('Word already used: '+w);
-    usedStarts.push(start);
-    // remove start from alpha
-    for (let k = alpha.length-1;k>=0;k--) if (alpha[k] === start) alpha.splice(k,1);
-    // find first letter in w that is still in alpha
-    let common = '';
-    for (let j = 0; j < w.length; j++){
-      const ch = w.charAt(j);
-      if (alpha.indexOf(ch) !== -1){ common = ch; break; }
-    }
-    if (common === '') throw new Error('You have ran out of letters, GAME OVER');
-    prevCommon = common;
-  }
-
-  if (submittedList.length === 0) return 'a';
-  return prevCommon;
+  return getDerivedRequiredStart(submittedList);
 }
 
 function renderLetterGrid(){
   const container = document.getElementById('letterGrid');
   if (!container) return;
   container.innerHTML = '';
-  const isAlfa = (typeof window !== 'undefined') && window.ALFAQUEST_MODE;
+  const isAlfa = isAlfaMode();
   const isNormal = isNormalAlfafillMode();
   const isSeq = isSequentialAlfafillMode();
   const isSeqFull = isSequentialFullCollectMode();
@@ -1142,32 +1061,40 @@ function loadLocal(){
 // Server session helpers (optional)
 async function createSession(){
   try{
-    const res = await fetch(apiUrl('/session/create'), {method:'POST', headers:{'Content-Type':'application/json'}, body: '{}' });
+    const res = await fetch(apiUrl('/api/v1/sessions'), {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ mode: ACTIVE_MODE })
+    });
     const j = await res.json();
     if (j.session){ sessionName = j.session; renderSessionInfo(null, 'created'); showInfoToast('Session created: '+sessionName); }
-    else showErrorToast('Failed to create session');
-  }catch(e){ showErrorToast('Error creating session (is Worker running at '+apiUrl('/session/create')+'?) '+e.message, 4200); }
+    else showErrorToast(j.error?.message || 'Failed to create session');
+  }catch(e){ showErrorToast('Error creating session (is Worker running at '+apiUrl('/api/v1/sessions')+'?) '+e.message, 4200); }
 }
 
 async function submitToServer(text){
   if (!sessionName) return showErrorToast('No session created');
   try{
-    const url = apiUrl('/session/'+encodeURIComponent(sessionName)+'/submit');
-    const res = await fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text})});
+    const url = apiUrl('/api/v1/sessions/'+encodeURIComponent(sessionName)+'/submissions');
+    const res = await fetch(url, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({country:text})
+    });
     const j = await res.json();
-    if (j.error) showErrorToast('Server error: '+j.error); else { renderSessionInfo(null, 'saved'); }
+    if (j.error) showErrorToast('Server error: '+j.error.message); else { renderSessionInfo(null, 'saved'); }
   }catch(e){ showErrorToast('Error submitting to server: '+e.message); }
 }
 
 async function loadSessionStatus(){
   if (!sessionName) return showErrorToast('No session');
   try{
-    const url = apiUrl('/session/'+encodeURIComponent(sessionName));
+    const url = apiUrl('/api/v1/sessions/'+encodeURIComponent(sessionName));
     const res = await fetch(url);
     const j = await res.json();
-    if (j.error) return showErrorToast('Server error: '+j.error);
-    submitted = (j.texts || []).map(s => normalize(s));
-    usedLetters = new Set(j.used || []);
+    if (j.error) return showErrorToast('Server error: '+j.error.message);
+    submitted = (j.game?.submitted || []).map(s => normalize(s));
+    usedLetters = new Set(j.game?.usedLetters || []);
     if (isAlfaScoringMode()) {
       submissionScores = submitted.map((entry, i) => scoreWord(entry, i + 1));
       speedBonuses = submitted.map(() => 0);
@@ -1224,6 +1151,12 @@ function recomputeUsedStarts(){
 window.addEventListener('load', ()=>{
   ensureSubmittedLegend();
   loadHighScore(); loadLocal(); updateUI();
+  if (window.ALFA_ENABLE_SERVER_SESSIONS) {
+    createSession().then(() => {
+      if (sessionName) return loadSessionStatus();
+      return null;
+    });
+  }
   const input = document.getElementById('countryInput');
   const scoreToggle = document.getElementById('scoreToggle');
   if (scoreToggle){

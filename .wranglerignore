@@ -3,5 +3,15 @@ node_modules/
 
 # Local development artifacts
 .wrangler/
+dist/
 .git/
 .gitignore
+
+# Tests, tooling, and local artifacts
+test/
+scripts/
+unused_files/
+*.log
+*.txt
+solver*.js
+tmp-*.js

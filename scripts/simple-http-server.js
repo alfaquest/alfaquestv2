@@ -1,8 +1,11 @@
-const http = require('http');
-const fs = require('fs');
-const path = require('path');
+import http from 'node:http';
+import fs from 'node:fs';
+import path from 'node:path';
 const port = process.env.PORT || 8000;
-const root = process.cwd();
+const builtSite = path.join(process.cwd(), 'dist');
+const root = process.env.STATIC_ROOT
+  ? path.resolve(process.env.STATIC_ROOT)
+  : (fs.existsSync(builtSite) ? builtSite : process.cwd());
 const mime = {
   '.html':'text/html', '.htm':'text/html', '.js':'application/javascript', '.css':'text/css', '.png':'image/png', '.jpg':'image/jpeg', '.jpeg':'image/jpeg', '.gif':'image/gif', '.svg':'image/svg+xml', '.json':'application/json', '.txt':'text/plain'
 };
