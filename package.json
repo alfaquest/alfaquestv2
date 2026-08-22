@@ -18,7 +18,7 @@
     "cf:dry-run": "wrangler deploy --dry-run --env=\"\" --config wrangler.worker.jsonc",
     "cf:publish-worker": "wrangler deploy --env=\"\" --config wrangler.worker.jsonc",
     "cf:publish-worker:staging": "wrangler deploy --env staging --config wrangler.worker.jsonc",
-    "cf:pages-publish": "wrangler pages deploy dist --project-name=alfaquest-pages --branch=main --config wrangler.pages.jsonc",
+    "cf:pages-publish": "wrangler pages deploy dist --project-name=alfaquest-pages --branch=main",
     "cf:deploy:checked": "npm run check && npm run cf:publish-worker && npm run cf:pages-publish"
   },
   "author": "",
